@@ -1,0 +1,59 @@
+{% block item %}
+    {% set path = entry.routeParameters ? path(entry.routeName, entry.routeParameters) : path(entry.routeName) %}
+    {% set label = entry.label %}
+    {% set icon = entry.icon %}
+    {% set handle = label|lower %}
+    {% set selectedSubnavItem = selectedSubnavItem|default(null) %}
+
+    {% set current = selectedSubnavItem is same as handle or entry.current %}
+    {% set inActiveTrail = entry.inActiveTrail %}
+
+    <a href="{{ path }}"
+       {% if current or inActiveTrail %}class="active {{ current ? 'underline' }}"{% endif %}
+    >
+        {{ block('icon') }}
+        {{ label }}
+    </a>
+{% endblock %}
+
+{% block menu %}
+    {% if entry.type is same as constant('Braunstetter\\MenuBundle\\Items\\MenuItem::TYPE_SYSTEM') %}
+        {{ block('system') }}
+    {% endif %}
+
+    {% if entry.type is same as constant('Braunstetter\\MenuBundle\\Items\\MenuItem::TYPE_SECTION') %}
+        {{ block('section') }}
+    {% endif %}
+
+    {% if entry.type is same as constant('Braunstetter\\MenuBundle\\Items\\MenuItem::TYPE_ROUTE') %}
+        {{ block('item') }}
+    {% endif %}
+{% endblock %}
+
+{% block section %}
+    {{ block('item') }}
+
+    <div class="section">
+        {% for entry in entry.children %}
+            {{ block('menu') }}
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block system %}
+    <div class="system">
+        {{ block('section') }}
+    </div>
+{% endblock %}
+
+{% block icon %}
+    {% if icon %}
+        {{ source(icon) }}
+    {% else %}
+        {{ source('@Menu/svg/default_folder.svg') }}
+    {% endif %}
+{% endblock %}
+
+
+
+

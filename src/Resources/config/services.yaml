@@ -1,0 +1,12 @@
+services:
+  Braunstetter\MenuBundle\Twig\Extension:
+    tags: [ 'twig.extension' ]
+    arguments:
+      - '@Braunstetter\MenuBundle\Services\Menu'
+      - '@Twig_Environment'
+
+  Braunstetter\MenuBundle\Services\Menu:
+    arguments:
+      - !tagged_iterator menu
+      - '@request_stack'
+      - '@router'
