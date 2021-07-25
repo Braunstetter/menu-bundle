@@ -7,12 +7,17 @@ namespace Braunstetter\MenuBundle\Services;
 use Braunstetter\MenuBundle\Items\MenuItem;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 class Menu
 {
     private iterable $entries;
     private RequestStack $requestStack;
     private UrlGeneratorInterface $generator;
+    private Environment $templating;
 
 
     private mixed $selectedSubnavItem;
@@ -22,13 +27,37 @@ class Menu
      * @param iterable $entries
      * @param RequestStack $requestStack
      * @param UrlGeneratorInterface $generator
+     * @param Environment $templating
      */
-    public function __construct(iterable $entries, RequestStack $requestStack, UrlGeneratorInterface $generator)
+    public function __construct(iterable $entries, RequestStack $requestStack, UrlGeneratorInterface $generator, Environment $templating)
     {
         $this->entries = $entries;
         $this->requestStack = $requestStack;
         $this->generator = $generator;
         $this->selectedSubnavItem = null;
+        $this->templating = $templating;
+    }
+
+    /**
+     * @param $context
+     * @param $name
+     * @throws SyntaxError
+     * @throws RuntimeError
+     * @throws LoaderError
+     * @return string
+     */
+    public function getMenu($context, $name): string
+    {
+
+        $selectedSubnavItem = array_key_exists('selectedSubnavItem', $context)
+            ? $context['selectedSubnavItem']
+            : null;
+
+        return $this->templating->render('@Menu/menu.html.twig',
+            [
+                'menus' => $this->getTree($name, $selectedSubnavItem)
+            ]
+        );
     }
 
     public function getTree($name, $selectedSubnavItem): array
@@ -55,7 +84,6 @@ class Menu
     {
         foreach (call_user_func($menu) as $item) {
             $this->setCurrentStates($item);
-            dump($item);
             $result[] = $item;
         }
 
