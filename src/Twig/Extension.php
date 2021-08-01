@@ -20,7 +20,8 @@ class Extension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('menu', [$this->menu, 'getMenu'], ['is_safe' => ['html'], 'needs_context' => true])
+            new TwigFunction('menu', [$this->menu, 'getMenu'], ['is_safe' => ['html'], 'needs_context' => true]),
+            new TwigFunction('breadcrumbs', [$this->menu, 'getBreadcrumbs'], ['is_safe' => ['html'], 'needs_context' => true])
         ];
     }
 

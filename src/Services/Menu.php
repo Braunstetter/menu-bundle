@@ -41,21 +41,38 @@ class Menu
     /**
      * @param $context
      * @param $name
-     * @throws SyntaxError
+     * @return string
      * @throws RuntimeError
      * @throws LoaderError
-     * @return string
+     * @throws SyntaxError
      */
     public function getMenu($context, $name): string
     {
 
-        $selectedSubnavItem = array_key_exists('selectedSubnavItem', $context)
-            ? $context['selectedSubnavItem']
-            : null;
+        $selectedSubnavItem = $this->setSubnavItem($context);
 
         return $this->templating->render('@Menu/menu.html.twig',
             [
                 'menus' => $this->getTree($name, $selectedSubnavItem)
+            ]
+        );
+    }
+
+    /**
+     * @param $context
+     * @param $name
+     * @return string
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function getBreadcrumbs($context, $name): string
+    {
+        $selectedSubnavItem = $this->setSubnavItem($context);
+
+        return $this->templating->render('@Menu/breadcrumb_menu.html.twig',
+            [
+                'menus' => $this->getCrumbs($name, $selectedSubnavItem)
             ]
         );
     }
@@ -69,6 +86,21 @@ class Menu
         foreach ($this->entries as $menu) {
             if ($menu->handle === $name) {
                 $result = $this->resolve($menu, $result);
+            }
+        }
+
+        return $result;
+    }
+
+    public function getCrumbs($name, mixed $selectedSubnavItem): array
+    {
+        if (isset($selectedSubnavItem)) $this->selectedSubnavItem = $selectedSubnavItem;
+
+        $result = [];
+
+        foreach ($this->entries as $menu) {
+            if ($menu->handle === $name) {
+                $result = $this->resolveBreadcrumbs($menu, $result);
             }
         }
 
@@ -90,6 +122,20 @@ class Menu
         return $result;
     }
 
+    private function resolveBreadcrumbs(mixed $menu, mixed $result)
+    {
+        foreach (call_user_func($menu) as $item) {
+            $crumb = $this->findBreadCrumb($item);
+
+            if ($crumb) {
+                $result[] = $item;
+                break;
+            }
+        }
+
+        return $result;
+    }
+
     private function setCurrentStates(MenuItem $item): void
     {
         if ($this->matches($item)) {
@@ -97,6 +143,19 @@ class Menu
         }
 
         $this->oneOfTheChildrenMatches($item);
+    }
+
+    private function findBreadCrumb(MenuItem $item): MenuItem|bool
+    {
+        if ($this->matches($item)) {
+            return false;
+        }
+
+        if ($this->oneOfTheChildrenMatches($item)) {
+            return $item;
+        }
+
+        return false;
     }
 
     private function matches(MenuItem $item): bool
@@ -147,5 +206,15 @@ class Menu
         return $item->handle === $this->selectedSubnavItem;
     }
 
+    /**
+     * @param $context
+     * @return mixed
+     */
+    private function setSubnavItem($context): mixed
+    {
+        return array_key_exists('selectedSubnavItem', $context)
+            ? $context['selectedSubnavItem']
+            : null;
+    }
 
 }
