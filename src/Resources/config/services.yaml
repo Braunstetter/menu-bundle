@@ -4,9 +4,22 @@ services:
     arguments:
       - '@Braunstetter\MenuBundle\Services\Menu'
 
-  Braunstetter\MenuBundle\Services\Menu:
+  Braunstetter\MenuBundle\Services\Resolver\AbstractMenuResolver:
+    abstract: true
     arguments:
       - !tagged_iterator menu
       - '@request_stack'
       - '@router'
+
+  Braunstetter\MenuBundle\Services\Resolver\MenuResolver:
+    parent: Braunstetter\MenuBundle\Services\Resolver\AbstractMenuResolver
+
+  Braunstetter\MenuBundle\Services\Resolver\BreadcrumbsResolver:
+    parent: Braunstetter\MenuBundle\Services\Resolver\AbstractMenuResolver
+
+
+  Braunstetter\MenuBundle\Services\Menu:
+    arguments:
       - '@Twig_Environment'
+      - '@Braunstetter\MenuBundle\Services\Resolver\MenuResolver'
+      - '@Braunstetter\MenuBundle\Services\Resolver\BreadcrumbsResolver'

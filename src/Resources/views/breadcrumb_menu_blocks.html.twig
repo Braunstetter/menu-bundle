@@ -1,0 +1,29 @@
+{% block menu %}
+    {% if entry.inActiveTrail or entry.current %}
+        {{ block('item') }}
+    {% endif %}
+{% endblock %}
+
+{% block item %}
+    {% set path = entry.routeParameters ? path(entry.routeName, entry.routeParameters) : path(entry.routeName) %}
+    {% set label = entry.label %}
+    {% set handle = label|lower %}
+    {% set selectedSubnavItem = selectedSubnavItem|default(null) %}
+
+    {% set current = selectedSubnavItem is same as handle or entry.current %}
+    {% set inActiveTrail = entry.inActiveTrail %}
+
+    <a href="{{ path }}"
+       {% if current or inActiveTrail %}class="active {{ current ? 'current' }}"{% endif %}
+    >
+
+        <span>{{ label }}</span>
+        {% if entry.children is not empty %}
+            {{ source('@Rock/images/caret.svg') }}
+        {% endif %}
+    </a>
+
+    {% for entry in entry.children %}
+        {{ block('menu') }}
+    {% endfor %}
+{% endblock %}

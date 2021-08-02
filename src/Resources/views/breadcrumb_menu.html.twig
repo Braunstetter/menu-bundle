@@ -1,0 +1,5 @@
+{% use '@Menu/breadcrumb_menu_blocks.html.twig' %}
+
+<nav>
+    {% for entry in menus %} {{ block('menu') }} {% endfor %}
+</nav>
