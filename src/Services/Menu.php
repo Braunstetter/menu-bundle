@@ -4,11 +4,8 @@
 namespace Braunstetter\MenuBundle\Services;
 
 
-use Braunstetter\MenuBundle\Items\MenuItem;
 use Braunstetter\MenuBundle\Services\Resolver\BreadcrumbsResolver;
 use Braunstetter\MenuBundle\Services\Resolver\MenuResolver;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -16,13 +13,8 @@ use Twig\Error\SyntaxError;
 
 class Menu
 {
-    private iterable $entries;
-    private RequestStack $requestStack;
-    private UrlGeneratorInterface $generator;
     private Environment $templating;
 
-
-    private mixed $selectedSubnavItem;
     private MenuResolver $menuResolver;
     private BreadcrumbsResolver $breadcrumbsResolver;
 
@@ -34,7 +26,6 @@ class Menu
      */
     public function __construct(Environment $templating, MenuResolver $menuResolver, BreadcrumbsResolver $breadcrumbsResolver)
     {
-        $this->selectedSubnavItem = null;
         $this->templating = $templating;
         $this->menuResolver = $menuResolver;
         $this->breadcrumbsResolver = $breadcrumbsResolver;
@@ -72,6 +63,16 @@ class Menu
                 'menus' => $this->breadcrumbsResolver->get($name, $context)
             ]
         );
+    }
+
+    public function getMenuResult($context, $name): array
+    {
+        return $this->menuResolver->get($name, $context);
+    }
+
+    public function getBreadcrumbsResult($context, $name): array
+    {
+        return $this->breadcrumbsResolver->get($name, $context);
     }
 
 }
