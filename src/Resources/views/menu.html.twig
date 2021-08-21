@@ -3,3 +3,8 @@
 <nav>
     {% for entry in menus %} {{ block('menu') }} {% endfor %}
 </nav>
+{% set items = menu_result('main_menu') %}
+
+{% for item in items %}
+    {# do whatever you want with it #}
+{% endfor %}
