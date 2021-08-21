@@ -8,7 +8,7 @@ behind this bundle then writing menus.
 
 As soon as I wanted to write my own matcher or change the rendering very specifically, it became uncomfortable.
 
-So the pros of this bundles are very clear:
+So the pros of this bundle are very clear:
 
 - no Matcher hell - when a template needs to activate a menu item it can be done by setting
   the [`selectedSubnavItem`](#activate-a-menu-item-when-its-not-a-direct-children)
@@ -91,10 +91,10 @@ twig function.
  {{ breadcrumbs('main_menu') }}
 ```
 
-Again a ready-to-be-styled markup gets rendered - divide by a caret.svg.
+A ready-to-be-styled markup gets rendered - divide by a caret.svg.
 
-The main difference between the `breadcrumbs` and the `menu` function is, that `breadcrumbs()` just output a menu tree
-line, when it contains some active route. Then it stops and prints this active tree leaf.
+The main difference between the `breadcrumbs()` and the `menu()` function is, that `breadcrumbs()` just output a menu tree
+line, as soon as it contains some active route. Then the iteration stops and this active tree leaf gets printed.
 
 ## Render menus by your own.
 
@@ -117,7 +117,7 @@ and [`breadcrumb_menu_blocks.html.twig`](src/Resources/views/breadcrumb_menu_blo
 
 ## Allow others to extend your menus with MenuEvents
 
-If you build an ecosystem you probably would also like to give other users and / or bundles the option to expand or
+If you build an ecosystem probably you would also like to give other users and / or bundles the option to expand or
 change your menus.
 
 This is very easy and straightforward with a menu event. After you injected
