@@ -6,11 +6,12 @@ I used [KnpMenuBundle](https://github.com/KnpLabs/KnpMenuBundle) for all my symf
 wonderful piece of software and I'm very grateful for it, but I sometimes felt like I was fighting more the system
 behind this bundle then writing menus.
 
-As soon as I wanted to write my own matcher or change the rendering very specifically, it became very uncomfortable.
+As soon as I wanted to write my own matcher or change the rendering very specifically, it became uncomfortable.
 
 So the pros of this bundles are very clear:
 
-- no Matcher hell - when a template needs to activate a menu item it can be done by setting the `selectedSubnavItem`
+- no Matcher hell - when a template needs to activate a menu item it can be done by setting
+  the [`selectedSubnavItem`](#activate-a-menu-item-when-its-not-a-direct-children)
 - no rendering system to fight against. If you want to use the render blocks provided by this bundle - u are welcome -
   if not just fetch the raw data (with the active trail) and rock'n roll.
 
@@ -78,8 +79,8 @@ MenuItem::section
 MenuItem::linkToRoute
 ```
 
-These items are basically the same but you can react to the different types inside your render loops, to give them a unique styling.
-But it is also possible to just nest `MenuItem::linkToRoute`
+These items are basically the same but you can react to the different types inside your render loops, to give them a
+unique styling. But it is also possible to just nest `MenuItem::linkToRoute`
 
 ## Breadcrumbs
 
@@ -92,20 +93,20 @@ twig function.
 
 Again a ready-to-be-styled markup gets rendered - divide by a caret.svg.
 
-The main difference between the `breadcrumbs` and the `menu` function is, that `breadcrumbs` just output a menu tree
+The main difference between the `breadcrumbs` and the `menu` function is, that `breadcrumbs()` just output a menu tree
 line, when it contains some active route. Then it stops and prints this active tree leaf.
 
 ## Render menus by your own.
 
-Sometimes you want to have complete control over the rendering of the menu but having all the information needed in
-place. That's why you can use the `menu_result` and the `breadcrumbs_result` twig functions just the same way as
-described above. The only difference is, now you have the raw data ready to go.
+Sometimes you want to have complete control over the rendering of the menu with all the information needed in place.
+That's why you can use the `menu_result()` and the `breadcrumbs_result()` twig functions just the same way as described
+above. The only difference is, now you have the raw data instead of markup.
 
 ```html
 {% set items = menu_result('main_menu') %}
 
 {% for item in items %}
-{# do whatever you want with it #}
+{# do whatever you want with the data #}
 {% endfor %}
 ```
 
@@ -116,7 +117,8 @@ and [`breadcrumb_menu_blocks.html.twig`](src/Resources/views/breadcrumb_menu_blo
 
 ## Allow others to extend your menus with MenuEvents
 
-Of course, you would also like to give other users and / or bundles the change to expand or change menus.
+If you build an ecosystem you probably would also like to give other users and / or bundles the option to expand or
+change your menus.
 
 This is very easy and straightforward with a menu event. After you injected
 the `Symfony\Contracts\EventDispatcher\EventDispatcherInterface` into the constructor of the menu class you are able to
@@ -129,14 +131,13 @@ $siteLinks = function () {
 };
 
 $siteLinksEvent = new MenuEvent($siteLinks());
-$this->eventDispatcher->dispatch($siteLinksEvent, 'app.before.main_menu');
-$this->eventDispatcher->dispatch($siteLinksEvent, 'app.after.main_menu');
+$this->eventDispatcher->dispatch($siteLinksEvent, 'app.main_menu');
 
 yield from $siteLinksEvent->items;
 ```
 
 Once you saved your menu inside a variable (`$siteLinks` in this case) you can create a `new MenuEvent($siteLinks)`. Now
-you can dispatch events (e.g. 'app.before.main_menu')
+you can dispatch events (e.g. 'app.main_menu')
 
 The `Braunstetter\MenuBundle\Events\MenuEvent` holds the menu items **and** can prepend / append menu items. You can
 create an EventSubscriber:
@@ -157,43 +158,34 @@ class MenuSubscriber implements EventSubscriberInterface
     /**
      * @param MenuEvent $event
      */
-    public function onAppBeforeMainMenu(MenuEvent $event)
+    public function onAppMainMenu(MenuEvent $event)
     {
-        /** @var Generator $items */
-        $items = $event->items;
 
-        $event->prepend(function() {
-            yield MenuItem::linkToRoute('Prepended', 'other');
-        });
-
-    }
-
-    public function onAppAfterMainMenu(MenuEvent $event)
-    {
-        /** @var Generator $items */
-        $items = $event->items;
-
-        $event->append(function() {
-            yield MenuItem::linkToRoute('Appended', 'other');
-        });
+        $event
+            ->prepend(function () {
+                yield MenuItem::linkToRoute('Prepended', 'other');
+            })
+            
+            ->append(function () {
+                yield MenuItem::linkToRoute('Appended', 'other');
+            });
 
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
-            'app.before.main_menu' => 'onAppBeforeMainMenu',
-            'app.after.main_menu' => 'onAppAfterMainMenu',
+            'app.main_menu' => 'onAppMainMenu',
         ];
     }
 }
 ```
 
-This way it's very easy to build an extensible menu system for your software ecosystems.
+This way it's very easy to build an extensible menu system for your software ecosystem.
 
 ## Activate a menu item when it's not a direct children
 
-Sometimes it's not just like every route is in a direct leaf of the parent and we can just rely on these active trail.
+Sometimes it's not just like every route is in a direct leaf of the parent, and we can just rely on these active trail.
 Then you need to tell your menu system 'somehow' to activate a seemingly unrelated menu item (and to activate its active
 trail).
 
@@ -211,6 +203,6 @@ Instead of going crazy with a custom Matcher you can just do that:
 {% endblock %}
 ```
 
-The Menu item matching this route will be active and all parents will be inside the active trail. 
+The Menu item matching this route will be active and all parents will be inside the active trail.
 
-> Note: `selectedSubnavItem` has to be inside the global scope - therefore define it in between your blocks.
+> Note: `selectedSubnavItem` has to be inside the global twig scope - therefore define it in between your blocks.
