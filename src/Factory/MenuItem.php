@@ -21,7 +21,7 @@ final class MenuItem
         return new SectionMenuItem($label, $routeName, $routeParameters, $icon);
     }
 
-   public static function system(string $label, string $routeName, array $routeParameters = [], ?string $icon = null): SystemMenuItem
+    public static function system(string $label, string $routeName, array $routeParameters = [], ?string $icon = null): SystemMenuItem
     {
         return new SystemMenuItem($label, $routeName, $routeParameters, $icon);
     }
