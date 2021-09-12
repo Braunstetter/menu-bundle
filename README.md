@@ -1,5 +1,7 @@
 # MenuBundle
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Braunstetter/menu-bundle/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/Braunstetter/menu-bundle/?branch=main)
+
 ## Pros of using this bundle
 
 I used [KnpMenuBundle](https://github.com/KnpLabs/KnpMenuBundle) for all my symfony projects over years. It's a
