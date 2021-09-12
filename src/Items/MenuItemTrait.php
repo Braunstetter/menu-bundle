@@ -102,7 +102,7 @@ trait MenuItemTrait
         if (!is_array($this->children)) {
             $this->children = iterator_to_array($this->children, false);
         }
-ä
+
         return $this->children;
     }
 
