@@ -1,6 +1,9 @@
 # MenuBundle
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Braunstetter/menu-bundle/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/Braunstetter/menu-bundle/?branch=main)
+[![Build Status](https://app.travis-ci.com/Braunstetter/MenuBundle.svg?branch=main)](https://app.travis-ci.com/Braunstetter/MenuBundle)
+[![Total Downloads](http://poser.pugx.org/braunstetter/menu-bundle/downloads)](https://packagist.org/packages/braunstetter/menu-bundle)
+[![License](http://poser.pugx.org/braunstetter/menu-bundle/license)](https://packagist.org/packages/braunstetter/menu-bundle)
 
 ## Pros of using this bundle
 
