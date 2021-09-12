@@ -58,6 +58,10 @@ class MainMenu extends Menu
 }
 ```
 
+The base path for images is just the `templates` folder of your application. But since this value will just be passed
+into the [Twig source function](https://twig.symfony.com/doc/2.x/functions/source.html) you can also use an alias
+like `@my_bundle/images/svg/thunder.svg`.
+
 Inside your twig templates you can print the menu by using the `menu()` function and passing it the kebab_cased class
 name.
 
@@ -93,8 +97,8 @@ twig function.
 
 A ready-to-be-styled markup gets rendered - divide by a caret.svg.
 
-The main difference between the `breadcrumbs()` and the `menu()` function is, that `breadcrumbs()` just output a menu tree
-line, as soon as it contains some active route. Then the iteration stops and this active tree leaf gets printed.
+The main difference between the `breadcrumbs()` and the `menu()` function is, that `breadcrumbs()` just output a menu
+tree line, as soon as it contains some active route. Then the iteration stops and this active tree leaf gets printed.
 
 ## Render menus by your own.
 
@@ -117,20 +121,20 @@ and [`breadcrumb_menu_blocks.html.twig`](src/Resources/views/breadcrumb_menu_blo
 
 ## Allow others to extend your menus with MenuEvents
 
-If you build an ecosystem probably you would also like to give other users and / or bundles the option to expand or
+If you build an ecosystem probably you would also like to give other users and / or bundles the option to extend or
 change your menus.
 
-This is very easy and straightforward with a menu event. After you injected
+This is very easy and straightforward with menu events. After you injected
 the `Symfony\Contracts\EventDispatcher\EventDispatcherInterface` into the constructor of the menu class you are able to
 dispatch events:
 
 ```php
-$siteLinks = function () {
+
+$siteLinksEvent = new MenuEvent(
     yield MenuItem::linkToRoute('Site', 'site', [], 'images/svg/align_justify.svg');
     yield MenuItem::linkToRoute('Dashboard', 'cp_dashboard');
-};
+);
 
-$siteLinksEvent = new MenuEvent($siteLinks());
 $this->eventDispatcher->dispatch($siteLinksEvent, 'app.main_menu');
 
 yield from $siteLinksEvent->items;
@@ -161,14 +165,13 @@ class MenuSubscriber implements EventSubscriberInterface
     public function onAppMainMenu(MenuEvent $event)
     {
 
-        $event
-            ->prepend(function () {
-                yield MenuItem::linkToRoute('Prepended', 'other');
-            })
-            
-            ->append(function () {
-                yield MenuItem::linkToRoute('Appended', 'other');
-            });
+        $event->prepend(function () {
+            yield MenuItem::linkToRoute('Prepended', 'other');
+        });
+
+        $event->append(function () {
+            yield MenuItem::linkToRoute('Appended', 'other');
+        });
 
     }
 
@@ -196,7 +199,7 @@ Instead of going crazy with a custom Matcher you can just do that:
 
 {% block title %}Hello!{% endblock %}
 
-{% set selectedSubnavItem = 'my_route' %}
+{% set selectedSubnavItem = 'snake_cased_item_label' %}
 
 {% block container %}
   {# your content here #}
@@ -206,3 +209,5 @@ Instead of going crazy with a custom Matcher you can just do that:
 The Menu item matching this route will be active and all parents will be inside the active trail.
 
 > Note: `selectedSubnavItem` has to be inside the global twig scope - therefore define it in between your blocks.
+
+> The value of the `selectedSubnavItem` has to be equal to the handle of the MenuItem (snake cased label). 

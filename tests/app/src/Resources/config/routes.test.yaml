@@ -1,0 +1,15 @@
+test:
+  path: /test/{name}
+  controller: Braunstetter\MenuBundle\Test\app\src\Controller\TestController::index
+
+test_one:
+  path: /test-one
+  controller: Braunstetter\MenuBundle\Test\app\src\Controller\TestController::levelOneRoute
+
+test_two:
+  path: /test-two
+  controller: Braunstetter\MenuBundle\Test\app\src\Controller\TestController::levelTwoRoute
+
+test_three:
+  path: /test-three
+  controller: Braunstetter\MenuBundle\Test\app\src\Controller\TestController::levelThreeRoute

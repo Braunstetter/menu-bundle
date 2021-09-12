@@ -1,0 +1,23 @@
+services:
+  Braunstetter\MenuBundle\Test\app\src\Menu\TestMenu:
+    tags: ['menu']
+
+  Braunstetter\MenuBundle\Test\app\src\Menu\TestEventMenu:
+    tags: [ 'menu' ]
+    arguments:
+      [ '@event_dispatcher' ]
+
+  Braunstetter\MenuBundle\Services\Resolver\MenuResolver:
+    parent: Braunstetter\MenuBundle\Services\Resolver\AbstractMenuResolver
+    public: true
+
+
+  Braunstetter\MenuBundle\Services\Menu:
+    arguments:
+      - '@Braunstetter\MenuBundle\Services\Resolver\MenuResolver'
+      - '@Braunstetter\MenuBundle\Services\Resolver\BreadcrumbsResolver'
+    public: true
+
+  Braunstetter\MenuBundle\Test\app\src\Events\Subscriber\TestSubscriber:
+    tags: ['kernel.event_subscriber']
+    public: true

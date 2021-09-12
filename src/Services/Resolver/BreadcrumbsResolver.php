@@ -40,8 +40,9 @@ class BreadcrumbsResolver extends AbstractMenuResolver
 
     private function findBreadCrumb(MenuItem $item): MenuItem|bool
     {
+
         if ($this->matches($item)) {
-            return false;
+            return $item;
         }
 
         if ($this->oneOfTheChildrenMatches($item)) {

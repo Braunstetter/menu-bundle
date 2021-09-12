@@ -20,6 +20,5 @@ services:
 
   Braunstetter\MenuBundle\Services\Menu:
     arguments:
-      - '@Twig_Environment'
       - '@Braunstetter\MenuBundle\Services\Resolver\MenuResolver'
       - '@Braunstetter\MenuBundle\Services\Resolver\BreadcrumbsResolver'
