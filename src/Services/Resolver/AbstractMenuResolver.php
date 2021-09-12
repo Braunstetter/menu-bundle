@@ -33,6 +33,10 @@ abstract class AbstractMenuResolver implements MenuResolverInterface
             return true;
         }
 
+        if (!$item->getRouteName()) {
+            return false;
+        }
+        
         $uri = $this->generator->generate($item->getRouteName(), $item->getRouteParameters());
 
         if ($uri === $this->requestStack->getCurrentRequest()?->getPathInfo()) {
