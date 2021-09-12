@@ -95,14 +95,14 @@ trait MenuItemTrait
     }
 
     /**
-     * @return array
+     * @return array|Traversable
      */
-    public function getChildren(): array
+    public function getChildren(): array|Traversable
     {
         if (!is_array($this->children)) {
             $this->children = iterator_to_array($this->children, false);
         }
-
+ä
         return $this->children;
     }
 
@@ -118,7 +118,7 @@ trait MenuItemTrait
             $this->children = iterator_to_array($this->children);
         }
 
-        return count($this->children) > 0;
+        return !empty($this->children);
     }
 
     /**
