@@ -213,6 +213,6 @@ Instead of going crazy with a custom Matcher you can just do that:
 
 The Menu item matching this route will be active and all parents will be inside the active trail.
 
-> Note: `selectedSubnavItem` has to be inside the global twig scope - therefore define it in between your blocks.
+> Note: `selectedSubnavItem` has to be inside the global twig scope - therefore define it in between your blocks or pass it as a variable from inside your controller.
 
 > The value of the `selectedSubnavItem` has to be equal to the handle of the MenuItem (snake cased label). 
