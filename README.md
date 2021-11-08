@@ -67,7 +67,7 @@ The base path for images is just the `templates` folder of your application. But
 into the [Twig source function](https://twig.symfony.com/doc/2.x/functions/source.html) you can also use an alias
 like `@my_bundle/images/svg/thunder.svg`.
 
-Inside your twig templates you can print the menu by using the `menu()` function and passing it the kebab_cased class
+Inside your twig templates you can print the menu by using the `menu()` function and passing it the snake_cased class
 name.
 
 ```html

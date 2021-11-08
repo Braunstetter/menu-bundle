@@ -4,6 +4,7 @@
 namespace Braunstetter\MenuBundle\Items;
 
 
+use Braunstetter\MenuBundle\Contracts\MenuItemInterface;
 use Symfony\Component\String\UnicodeString;
 use Traversable;
 use function count;
@@ -19,8 +20,10 @@ trait MenuItemTrait
     private bool $current;
     private bool $inActiveTrail;
     public string $handle;
+    public string $url;
+    public string $target;
 
-    public function __construct(string $label, string $routeName, array $routeParameters, ?string $icon)
+    public function __construct(string $label, ?string $icon)
     {
         $this->children = [];
         $this->current = false;
@@ -28,8 +31,6 @@ trait MenuItemTrait
 
         $this->setLabel($label);
         $this->setIcon($icon);
-        $this->setRouteName($routeName);
-        $this->setRouteParameters($routeParameters);
 
         $this->handle = (new UnicodeString($this->label))->snake()->toString();
     }
@@ -68,7 +69,7 @@ trait MenuItemTrait
 
     public function getRouteName(): ?string
     {
-        return $this->routeName;
+        return $this->routeName ?? null;
     }
 
     public function setRouteName(?string $routeName): static
@@ -94,9 +95,6 @@ trait MenuItemTrait
         return $this;
     }
 
-    /**
-     * @return array|Traversable
-     */
     public function getChildren(): array|Traversable
     {
         if (!is_array($this->children)) {
@@ -151,6 +149,32 @@ trait MenuItemTrait
     public function setInActiveTrail(bool $inActiveTrail): void
     {
         $this->inActiveTrail = $inActiveTrail;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl(): string
+    {
+        return $this->url;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTarget(): string
+    {
+        return $this->target ?: '_self';
+    }
+
+    /**
+     * @param string $target
+     * @return MenuItemInterface
+     */
+    public function setTarget(string $target): MenuItemInterface
+    {
+        $this->target = $target;
+        return $this;
     }
 
 }

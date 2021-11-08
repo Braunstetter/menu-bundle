@@ -4,6 +4,7 @@
 namespace Braunstetter\MenuBundle\Services\Resolver;
 
 
+use Braunstetter\MenuBundle\Contracts\MenuItemInterface;
 use Braunstetter\MenuBundle\Contracts\MenuResolverInterface;
 use Braunstetter\MenuBundle\Items\MenuItem;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -73,7 +74,7 @@ abstract class AbstractMenuResolver implements MenuResolverInterface
      * @param MenuItem $item
      * @return bool
      */
-    private function selectedSubnavItemMatches(MenuItem $item): bool
+    private function selectedSubnavItemMatches(MenuItemInterface $item): bool
     {
         if (!isset($this->selectedSubnavItem)) {
             return false;
