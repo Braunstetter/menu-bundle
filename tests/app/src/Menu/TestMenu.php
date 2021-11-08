@@ -17,7 +17,10 @@ class TestMenu extends Menu
                 yield MenuItem::section('Section', 'test_one', [], 'images/svg/thunder.svg')->setChildren(function () {
                     yield MenuItem::linkToRoute('Site', 'test_two', [], '@Menu/svg/default_folder.svg');
                     yield MenuItem::linkToRoute('Dashboard', 'test_three')->setTarget(Item::TARGET_BLANK);
-                    yield MenuItem::linkToUrl('UrlTest', 'https://blubber.com');
+
+                    yield MenuItem::linkToUrl('UrlTest', 'https://blubber.com', Item::TARGET_BLANK);
+
+
                 });
             });
 

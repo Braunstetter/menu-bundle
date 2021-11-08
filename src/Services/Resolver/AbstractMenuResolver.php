@@ -76,6 +76,10 @@ abstract class AbstractMenuResolver implements MenuResolverInterface
      */
     private function selectedSubnavItemMatches(MenuItemInterface $item): bool
     {
+        if (!($item instanceof MenuItem)) {
+            return false;
+        }
+
         if (!isset($this->selectedSubnavItem)) {
             return false;
         }

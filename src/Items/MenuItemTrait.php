@@ -151,27 +151,17 @@ trait MenuItemTrait
         $this->inActiveTrail = $inActiveTrail;
     }
 
-    /**
-     * @return string
-     */
     public function getUrl(): string
     {
         return $this->url;
     }
 
-    /**
-     * @return string
-     */
     public function getTarget(): string
     {
         return $this->target ?: '_self';
     }
 
-    /**
-     * @param string $target
-     * @return MenuItemInterface
-     */
-    public function setTarget(string $target): MenuItemInterface
+    public function setTarget(string $target): static
     {
         $this->target = $target;
         return $this;
