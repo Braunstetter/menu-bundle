@@ -86,10 +86,36 @@ The formatted result:
 MenuItem::system
 MenuItem::section
 MenuItem::linkToRoute
+MenuItem::linkToUrl
 ```
 
 These items are basically the same but you can react to the different types inside your render loops, to give them a
-unique styling. But it is also possible to just nest `MenuItem::linkToRoute`
+unique styling. But it is also possible to just nest `MenuItem::linkToRoute` or `MenuItem::linkToRoute`
+
+#### LinkToRoute Item
+
+This MenuItem has a special signature:
+
+```
+  yield MenuItem::linkToUrl('Some extern resource', 'https://my-site.com', MenuItem::TARGET_BLANK, 'images/svg/thunder.svg');
+```
+
+As you can see the **label** stays the same but then instead of passing a route and route parameters, you specify an **
+absolute Url** followed by a **target** and the **icon**.
+
+> You also can set the target of your menu items by using the `$item->setTarget(MenuItem::TARGET_BLANK)` method. There are predefined targets to choose from set as constants inside the `'Braunstetter\MenuBundle\Items\MenuItem'` class.
+
+Here is a full example:
+
+```php
+yield MenuItem::system('System', 'test', [], 'images/svg/system.svg')
+    ->setChildren(function () {
+            yield MenuItem::linkToRoute('Dashboard', 'dashboard')->setTarget(Item::TARGET_BLANK);
+            yield MenuItem::linkToUrl('Shop', 'https://my-online-shop.com', Item::TARGET_BLANK, 'images/svg/thunder.svg');
+    });
+```
+
+As you can see the `setTarget` method works on **every** Menu Item not just the `linkToUrl`.
 
 ## Breadcrumbs
 
