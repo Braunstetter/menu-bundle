@@ -30,7 +30,7 @@ final class MenuItem
 
     public static function linkToUrl(string $label, string $url, ?string $target = null, ?string $icon = null): UrlMenuItem
     {
-        return new UrlMenuItem($label, $url, $target ?: Item::TARGET_DEFAULT, $icon);
+        return new UrlMenuItem($label, $url, $icon, ['linkAttr' => ['target' => $target ?: Item::TARGET_DEFAULT]]);
     }
 
 }

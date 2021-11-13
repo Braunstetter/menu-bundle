@@ -5,17 +5,29 @@
 {% endblock %}
 
 {% block item %}
-    {% set path = entry.routeParameters ? path(entry.routeName, entry.routeParameters) : path(entry.routeName) %}
+    {% import '@Menu/macro/helper.html.twig' as helper %}
+
+    {% if entry.type is same as constant('Braunstetter\\MenuBundle\\Items\\MenuItem::TYPE_URL') %}
+        {% set path = entry.url %}
+    {% else %}
+        {% set path = entry.routeParameters ? path(entry.routeName, entry.routeParameters) : path(entry.routeName) %}
+    {% endif %}
+
     {% set label = entry.label %}
     {% set handle = label|lower %}
     {% set selectedSubnavItem = selectedSubnavItem|default(null) %}
-
     {% set current = selectedSubnavItem is same as handle or entry.current %}
-    {% set inActiveTrail = entry.inActiveTrail %}
+    {% set linkAttr = entry.linkAttr %}
 
-    <a href="{{ path }}"
-       {% if current or inActiveTrail %}class="active {{ current ? 'current' }}"{% endif %}
-    >
+    {% if current or entry.inActiveTrail %}
+        {% set linkAttr = linkAttr|merge({'class' : (linkAttr.class|default('') ~ ' active')|trim }) %}
+    {% endif %}
+
+    {% if current %}
+        {% set linkAttr = linkAttr|merge({'class' : (linkAttr.class|default('') ~ ' current')|trim }) %}
+    {% endif %}
+
+    <a href="{{ path }}" {{ helper.renderAttr(linkAttr) }}>
 
         <span>{{ label }}</span>
         {% if entry.children is not empty %}

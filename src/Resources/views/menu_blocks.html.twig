@@ -1,49 +1,39 @@
 {% block item %}
-    {% set path = entry.routeParameters ? path(entry.routeName, entry.routeParameters) : path(entry.routeName) %}
+    {% import '@Menu/macro/helper.html.twig' as helper %}
+
+    {% if entry.type is same as constant('Braunstetter\\MenuBundle\\Items\\MenuItem::TYPE_URL') %}
+        {% set path = entry.url %}
+    {% else %}
+        {% set path = entry.routeParameters ? path(entry.routeName, entry.routeParameters) : path(entry.routeName) %}
+    {% endif %}
+
     {% set label = entry.label %}
     {% set icon = entry.icon %}
     {% set handle = label|lower %}
     {% set selectedSubnavItem = selectedSubnavItem|default(null) %}
-
     {% set current = selectedSubnavItem is same as handle or entry.current %}
-    {% set inActiveTrail = entry.inActiveTrail %}
+    {% set attr = entry.attr %}
+    {% set linkAttr = entry.linkAttr %}
 
-    <a href="{{ path }}"
-       {% if current or inActiveTrail %}class="active {{ current ? 'underline' }}"{% endif %}
-    >
-        {{ block('icon') }}
-        {{ label }}
-    </a>
-{% endblock %}
-
-{% block menu %}
-    {% if entry.type is same as constant('Braunstetter\\MenuBundle\\Items\\MenuItem::TYPE_SYSTEM') %}
-        {{ block('system') }}
+    {% if current or entry.inActiveTrail %}
+        {% set linkAttr = linkAttr|merge({'class' : (linkAttr.class|default('') ~ ' active')|trim }) %}
     {% endif %}
 
-    {% if entry.type is same as constant('Braunstetter\\MenuBundle\\Items\\MenuItem::TYPE_SECTION') %}
-        {{ block('section') }}
+    {% if current %}
+        {% set linkAttr = linkAttr|merge({'class' : (linkAttr.class|default('') ~ ' underline')|trim }) %}
     {% endif %}
 
-    {% if entry.type is same as constant('Braunstetter\\MenuBundle\\Items\\MenuItem::TYPE_ROUTE') %}
-        {{ block('item') }}
-    {% endif %}
-{% endblock %}
+    <div {{ helper.renderAttr(attr) }}>
+        <a href="{{ path }}" {{ helper.renderAttr(linkAttr) }}>
+            {{ block('icon') }}
+            {{ label }}
+        </a>
 
-{% block section %}
-    {{ block('item') }}
-
-    <div class="section">
         {% for entry in entry.children %}
-            {{ block('menu') }}
+            {{ block('item') }}
         {% endfor %}
     </div>
-{% endblock %}
 
-{% block system %}
-    <div class="system">
-        {{ block('section') }}
-    </div>
 {% endblock %}
 
 {% block icon %}

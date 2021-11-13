@@ -2,9 +2,12 @@
 
 namespace Braunstetter\MenuBundle\Test\functional;
 
+use Braunstetter\MenuBundle\Items\MenuItem;
 use Braunstetter\MenuBundle\Test\trait\TestKernelTrait;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\DomCrawler\Crawler;
+
 
 class TemplatingTest extends TestCase
 {
@@ -16,11 +19,12 @@ class TemplatingTest extends TestCase
         $client->request('GET', '/test/test_menu');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
-
         $this->assertSame(2, $client->getCrawler()->filter('nav')->count());
         $this->assertSame(2, $client->getCrawler()->filter('nav > div.system > a')->count());
-        $this->assertSame(2, $client->getCrawler()->filter('nav > div.system > div.section div.section')->count());
-        $this->assertSame(4, $client->getCrawler()->filter('nav > div.system > div.section > div.section a')->count());
+        $this->assertSame(2, $client->getCrawler()->filter('nav > div.system > div.section')->count());
+
+//        dump($client->getResponse()->getContent());
+        $this->assertSame(7, $client->getCrawler()->filter('nav > div.system > div.section a')->count());
     }
 
     public function test_route_triggers_active()
@@ -33,6 +37,32 @@ class TemplatingTest extends TestCase
         $this->assertSame(2, $client->getCrawler()->filter('nav')->count());
         $this->assertSame(6, $client->getCrawler()->filter('nav')->first()->filter('a.active')->count());
         $this->assertSame(9, $client->getCrawler()->filter('nav')->filter('a.active')->count());
+    }
 
+    public function test_route_to_url_renders_correctly()
+    {
+        $client = new KernelBrowser($this->kernel);
+        $client->request('GET', 'test-two');
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+        $this->assertSame(2, $client->getCrawler()->filter('nav')->count());
+        $this->assertSame(1, $client->getCrawler()->filter('nav')->first()
+            ->filter('a')->reduce(function ($item) {
+                /** @var Crawler $item */
+                return $item->link()->getUri() === 'https://blubber.com';
+            })->count());
+    }
+
+    public function test_route_to_url_has_correct_target_attribute()
+    {
+        $client = new KernelBrowser($this->kernel);
+        $client->request('GET', 'test-two');
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $routeToUrlItem =  $client->getCrawler()->filter('nav')->first()
+            ->filter('a')->reduce(function ($item) {/** @var Crawler $item */return $item->link()->getUri() === 'https://blubber.com';});
+
+        $this->assertSame($routeToUrlItem->link()->getNode()->getAttribute('target'), MenuItem::TARGET_BLANK);
     }
 }

@@ -3,11 +3,8 @@
 
 namespace Braunstetter\MenuBundle\Items;
 
-
-use Braunstetter\MenuBundle\Contracts\MenuItemInterface;
 use Symfony\Component\String\UnicodeString;
 use Traversable;
-use function count;
 
 trait MenuItemTrait
 {
@@ -22,8 +19,10 @@ trait MenuItemTrait
     public string $handle;
     public string $url;
     public string $target;
+    public array $attr;
+    public array $linkAttr;
 
-    public function __construct(string $label, ?string $icon)
+    public function __construct(string $label, ?string $icon, ?array $options = [])
     {
         $this->children = [];
         $this->current = false;
@@ -31,6 +30,10 @@ trait MenuItemTrait
 
         $this->setLabel($label);
         $this->setIcon($icon);
+        $this->target = $options['target'] ?? '_self';
+
+        $this->attr = $options['attr'] ?? [];
+        $this->linkAttr = $options['linkAttr'] ?? [];
 
         $this->handle = (new UnicodeString($this->label))->snake()->toString();
     }
@@ -165,6 +168,13 @@ trait MenuItemTrait
     {
         $this->target = $target;
         return $this;
+    }
+
+    public function addClass(string $class)
+    {
+        $this->attr = array_replace([
+            'class' => implode(' ', [$class, $this->attr['class'] ?? ''])
+        ], $this->attr);
     }
 
 }

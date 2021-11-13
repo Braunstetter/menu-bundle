@@ -13,8 +13,9 @@ final class SystemMenuItem extends MenuItem
 
         $this->setRouteName($routeName);
         $this->setRouteParameters($routeParameters);
+        $this->setType(MenuItem::TYPE_ROUTE);
 
-        $this->setType(MenuItem::TYPE_SYSTEM);
+        $this->addClass('system');
     }
 
 }

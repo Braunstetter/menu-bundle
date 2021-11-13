@@ -32,7 +32,7 @@ class ResolverResultsTest extends TestCase
 
         /** @var UrlMenuItem $item */
         $item = $menu[0]->getChildren()[0]->getChildren()[2];
-        $this->assertSame($item->getTarget(), MenuItem::TARGET_BLANK);
+        $this->assertSame($item->linkAttr['target'], MenuItem::TARGET_BLANK);
         $this->assertSame($item->getType(), MenuItem::TYPE_URL);
         $this->assertNotNull($item->getUrl());
         $this->assertIsString($item->getUrl());

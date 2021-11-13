@@ -20,7 +20,6 @@ class TestMenu extends Menu
 
                     yield MenuItem::linkToUrl('UrlTest', 'https://blubber.com', Item::TARGET_BLANK);
 
-
                 });
             });
 

@@ -6,12 +6,11 @@ namespace Braunstetter\MenuBundle\Items;
 final class UrlMenuItem extends MenuItem
 {
 
-    public function __construct(string $label, string $url, ?string $target, ?string $icon)
+    public function __construct(string $label, string $url,  ?string $icon, ?array $options)
     {
-        parent::__construct($label, $icon);
+        parent::__construct($label, $icon, $options);
 
         $this->url = $url;
-        $this->target = $target ?: '_self';
 
         $this->setType(MenuItem::TYPE_URL);
     }
