@@ -3,9 +3,10 @@
 namespace Braunstetter\MenuBundle\Test\app\src\Menu;
 
 use Braunstetter\MenuBundle\Factory\MenuItem;
+use Braunstetter\MenuBundle\Items\UrlMenuItem;
 use Braunstetter\MenuBundle\Menu;
 use Traversable;
-use Braunstetter\MenuBundle\Items\MenuItem as Item;
+use Braunstetter\MenuBundle\Items\Item;
 
 class TestMenu extends Menu
 {
@@ -20,6 +21,7 @@ class TestMenu extends Menu
 
                     yield MenuItem::linkToUrl('UrlTest', 'https://blubber.com', Item::TARGET_BLANK);
 
+                    yield (new UrlMenuItem('PlainUrlItemTest','https://custom-target-by-linkattr.com', null, ['linkAttr' => ['target' => Item::TARGET_PARENT]]));
                 });
             });
 

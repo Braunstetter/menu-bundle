@@ -4,7 +4,7 @@
 namespace Braunstetter\MenuBundle\Services\Resolver;
 
 
-use Braunstetter\MenuBundle\Items\MenuItem;
+use Braunstetter\MenuBundle\Items\Item;
 
 class BreadcrumbsResolver extends AbstractMenuResolver
 {
@@ -38,7 +38,7 @@ class BreadcrumbsResolver extends AbstractMenuResolver
         return $result;
     }
 
-    private function findBreadCrumb(MenuItem $item): MenuItem|bool
+    private function findBreadCrumb(Item $item): Item|bool
     {
 
         if ($this->matches($item)) {

@@ -18,7 +18,6 @@ trait MenuItemTrait
     private bool $inActiveTrail;
     public string $handle;
     public string $url;
-    public string $target;
     public array $attr;
     public array $linkAttr;
 
@@ -30,10 +29,13 @@ trait MenuItemTrait
 
         $this->setLabel($label);
         $this->setIcon($icon);
-        $this->target = $options['target'] ?? '_self';
 
         $this->attr = $options['attr'] ?? [];
         $this->linkAttr = $options['linkAttr'] ?? [];
+
+        if (isset($options['target'])) {
+            $this->setTarget($options['target']);
+        }
 
         $this->handle = (new UnicodeString($this->label))->snake()->toString();
     }
@@ -47,6 +49,14 @@ trait MenuItemTrait
     {
         $this->type = $type;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHandle(): string
+    {
+        return $this->handle;
     }
 
     public function getLabel(): string
@@ -159,21 +169,16 @@ trait MenuItemTrait
         return $this->url;
     }
 
-    public function getTarget(): string
-    {
-        return $this->target ?: '_self';
-    }
-
     public function setTarget(string $target): static
     {
-        $this->target = $target;
+        $this->linkAttr = array_replace($this->linkAttr, ['target' => $target]);
         return $this;
     }
 
     public function addClass(string $class)
     {
         $this->attr = array_replace([
-            'class' => implode(' ', [$class, $this->attr['class'] ?? ''])
+            'class' => trim(implode(' ', [$class, $this->attr['class'] ?? '']))
         ], $this->attr);
     }
 

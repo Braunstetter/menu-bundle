@@ -2,7 +2,7 @@
 
 namespace Braunstetter\MenuBundle\Test\functional;
 
-use Braunstetter\MenuBundle\Items\MenuItem;
+use Braunstetter\MenuBundle\Items\Item;
 use Braunstetter\MenuBundle\Test\trait\TestKernelTrait;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -24,7 +24,7 @@ class TemplatingTest extends TestCase
         $this->assertSame(2, $client->getCrawler()->filter('nav > div.system > div.section')->count());
 
 //        dump($client->getResponse()->getContent());
-        $this->assertSame(7, $client->getCrawler()->filter('nav > div.system > div.section a')->count());
+        $this->assertSame(8, $client->getCrawler()->filter('nav > div.system > div.section a')->count());
     }
 
     public function test_route_triggers_active()
@@ -46,10 +46,17 @@ class TemplatingTest extends TestCase
 
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertSame(2, $client->getCrawler()->filter('nav')->count());
+
         $this->assertSame(1, $client->getCrawler()->filter('nav')->first()
-            ->filter('a')->reduce(function ($item) {
+            ->filter('a[target=_blank]')->reduce(function ($item) {
                 /** @var Crawler $item */
                 return $item->link()->getUri() === 'https://blubber.com';
+            })->count());
+
+        $this->assertSame(1, $client->getCrawler()->filter('nav')->first()
+            ->filter('a[target=_parent]')->reduce(function ($item) {
+                /** @var Crawler $item */
+                return $item->link()->getUri() === 'https://custom-target-by-linkattr.com';
             })->count());
     }
 
@@ -63,6 +70,6 @@ class TemplatingTest extends TestCase
         $routeToUrlItem =  $client->getCrawler()->filter('nav')->first()
             ->filter('a')->reduce(function ($item) {/** @var Crawler $item */return $item->link()->getUri() === 'https://blubber.com';});
 
-        $this->assertSame($routeToUrlItem->link()->getNode()->getAttribute('target'), MenuItem::TARGET_BLANK);
+        $this->assertSame($routeToUrlItem->link()->getNode()->getAttribute('target'), Item::TARGET_BLANK);
     }
 }

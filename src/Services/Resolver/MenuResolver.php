@@ -4,7 +4,7 @@
 namespace Braunstetter\MenuBundle\Services\Resolver;
 
 
-use Braunstetter\MenuBundle\Items\MenuItem;
+use Braunstetter\MenuBundle\Items\Item;
 
 class MenuResolver extends AbstractMenuResolver
 {
@@ -39,7 +39,7 @@ class MenuResolver extends AbstractMenuResolver
         return $result;
     }
 
-    private function setCurrentStates(MenuItem $item): void
+    private function setCurrentStates(Item $item): void
     {
         if ($this->matches($item)) {
             return;

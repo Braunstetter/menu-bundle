@@ -6,7 +6,7 @@ namespace Braunstetter\MenuBundle\Services\Resolver;
 
 use Braunstetter\MenuBundle\Contracts\MenuItemInterface;
 use Braunstetter\MenuBundle\Contracts\MenuResolverInterface;
-use Braunstetter\MenuBundle\Items\MenuItem;
+use Braunstetter\MenuBundle\Items\Item;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -27,7 +27,7 @@ abstract class AbstractMenuResolver implements MenuResolverInterface
         $this->generator = $generator;
     }
 
-    protected function matches(MenuItem $item): bool
+    protected function matches(Item $item): bool
     {
         if ($this->selectedSubnavItemMatches($item)) {
             $item->setCurrent(true);
@@ -48,7 +48,7 @@ abstract class AbstractMenuResolver implements MenuResolverInterface
         return false;
     }
 
-    protected function oneOfTheChildrenMatches(MenuItem $item): bool
+    protected function oneOfTheChildrenMatches(Item $item): bool
     {
         if (!empty($item->getChildren())) {
 
@@ -71,20 +71,17 @@ abstract class AbstractMenuResolver implements MenuResolverInterface
     }
 
     /**
-     * @param MenuItem $item
+     * @param Item $item
      * @return bool
      */
     private function selectedSubnavItemMatches(MenuItemInterface $item): bool
     {
-        if (!($item instanceof MenuItem)) {
-            return false;
-        }
 
         if (!isset($this->selectedSubnavItem)) {
             return false;
         }
 
-        return $item->handle === $this->selectedSubnavItem;
+        return $item->getHandle() === $this->selectedSubnavItem;
     }
 
     /**

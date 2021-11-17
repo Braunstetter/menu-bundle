@@ -1,7 +1,7 @@
 {% block item %}
     {% import '@Menu/macro/helper.html.twig' as helper %}
 
-    {% if entry.type is same as constant('Braunstetter\\MenuBundle\\Items\\MenuItem::TYPE_URL') %}
+    {% if entry.type is same as constant('Braunstetter\\MenuBundle\\Items\\Item::TYPE_URL') %}
         {% set path = entry.url %}
     {% else %}
         {% set path = entry.routeParameters ? path(entry.routeName, entry.routeParameters) : path(entry.routeName) %}

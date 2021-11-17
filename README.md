@@ -51,8 +51,8 @@ class MainMenu extends Menu
     public function define(): Traversable
     {
 
-        yield MenuItem::system('System', 'route_to_my_system', [], 'images/svg/system.svg')->setChildren(function () {
-            yield MenuItem::section('Section', 'route_to_my_section', [], 'images/svg/thunder.svg')->setChildren(function () {
+        yield MenuItem::linkToRoute('System', 'route_to_my_system', [], 'images/svg/system.svg')->setChildren(function () {
+            yield MenuItem::linkToUrl('Section', 'https://my-site.com', MenuItem::TARGET_BLANK, 'images/svg/thunder.svg')->setChildren(function () {
                 yield MenuItem::linkToRoute('Site', 'site', [], 'images/svg/align_justify.svg');
                 yield MenuItem::linkToRoute('Dashboard', 'cp_dashboard');
             });
@@ -63,9 +63,13 @@ class MainMenu extends Menu
 }
 ```
 
+### Icons
+
 The base path for images is just the `templates` folder of your application. But since this value will just be passed
 into the [Twig source function](https://twig.symfony.com/doc/2.x/functions/source.html) you can also use an alias
 like `@my_bundle/images/svg/thunder.svg`.
+
+### Twig helper
 
 Inside your twig templates you can print the menu by using the `menu()` function and passing it the snake_cased class
 name.
@@ -83,29 +87,49 @@ The formatted result:
 ### Types of MenuItems
 
 ```
-MenuItem::system
-MenuItem::section
 MenuItem::linkToRoute
 MenuItem::linkToUrl
 ```
 
-These items are basically the same but you can react to the different types inside your render loops, to give them a
-unique styling. But it is also possible to just nest `MenuItem::linkToRoute` or `MenuItem::linkToRoute`
+#### LinkToRoute
 
-#### LinkToRoute Item
-
-This MenuItem has a special signature:
-
-```
-  yield MenuItem::linkToUrl('Some extern resource', 'https://my-site.com', MenuItem::TARGET_BLANK, 'images/svg/thunder.svg');
+```php
+yield MenuItem::linkToRoute('Label', 'route-name', [], 'images/svg/align_justify.svg');
 ```
 
-As you can see the **label** stays the same but then instead of passing a route and route parameters, you specify an **
-absolute Url** followed by a **target** and the **icon**.
+Parameter:
+1. The shown label - you are free to translate it right here or inside your custom template.
+2. Route name.
+3. Route Parameters.
+4. Icon (optional)
 
-> You also can set the target of your menu items by using the `$item->setTarget(MenuItem::TARGET_BLANK)` method. There are predefined targets to choose from set as constants inside the `'Braunstetter\MenuBundle\Items\MenuItem'` class.
+#### LinkToUrl
 
-Here is a full example:
+
+```php
+yield MenuItem::linkToUrl('Some extern resource', 'https://my-site.com', MenuItem::TARGET_BLANK, 'images/svg/thunder.svg');
+```
+Parameter:
+1. Label
+2. Absolute url
+3. Target (optional)
+4. icon (optional)
+
+
+> Instead of passing a target as the third argument you can change/set the target using the `$item->setTarget(MenuItem::TARGET_BLANK)` method. 
+> 
+>There are predefined targets to choose from set as constants inside the `'Braunstetter\MenuBundle\Items\MenuItem'` class.
+
+#### Setting targets
+
+As shown above - the `linkToUrl` item comes with the possibility to set the target attribute by passing it as a third argument to the static method.
+This is useful because an extern/absolute Link often should be opened as a `target="_blank"` link. 
+But if you want to change the target of any other link you can do this by using the `setTarget` method of any `MenuItem` implementing `MenuItemInterface`.
+
+Here is a full example - and as you can see:
+
+* **Dashboard** with `setTarget`
+* **Shop** with target set by using the third argument of the `linkTourl` method:
 
 ```php
 yield MenuItem::system('System', 'test', [], 'images/svg/system.svg')
@@ -115,7 +139,29 @@ yield MenuItem::system('System', 'test', [], 'images/svg/system.svg')
     });
 ```
 
-As you can see the `setTarget` method works on **every** Menu Item not just the `linkToUrl`.
+> There are additional `MenuItem::system` and `MenuItem::section`.
+> These are just convenient static methods to generate `MenuItem::linkToRoute` items with an `attr.class` set to system/section for rendering.
+
+### Custom menu items
+
+You are not limited to use the build in menu types. You can just create a class with a few static methods in order to create your own menu-item Factory. Or just pass a new `Braunstetter\MenuBundle\Items\Item` directly:
+
+```php
+yield (new Item('My label', 'images/svg/system.svg', ['linkAttr' => ['target' => Item::TARGET_BLANK]]));
+```
+
+Arguments:
+
+1. Label
+2. Icon (optional)
+3. Options (optional)
+
+If you are using the default rendering blocks just `$options['attr']`, `$options['linkAttr']` and `$options['target']` have any impact on rendering results.
+
+> Passing the target as an option is actually the same as passing it directly to $options['linkAttr]. It is just a shortcut.
+
+If you need to pass more options it is a good time for creating a custom MenuItem class extending `Braunstetter\MenuBundle\Items\Item`.
+This way you are able to create additional properties on your class and use the `$options` to fill them inside your constructor. 
 
 ## Breadcrumbs
 
@@ -126,9 +172,9 @@ twig function.
  {{ breadcrumbs('main_menu') }}
 ```
 
-A ready-to-be-styled markup gets rendered - divide by a caret.svg.
+A ready-to-be-styled markup gets rendered - divided by a caret.svg.
 
-The main difference between the `breadcrumbs()` and the `menu()` function is, that `breadcrumbs()` just output a menu
+The main difference between the `breadcrumbs()` and the `menu()` function is, that `breadcrumbs()` just outputs a menu
 tree line, as soon as it contains some active route. Then the iteration stops and this active tree leaf gets printed.
 
 ## Render menus by your own.

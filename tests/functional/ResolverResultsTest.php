@@ -2,7 +2,7 @@
 
 namespace Braunstetter\MenuBundle\Test\functional;
 
-use Braunstetter\MenuBundle\Items\MenuItem;
+use Braunstetter\MenuBundle\Items\Item;
 use Braunstetter\MenuBundle\Items\UrlMenuItem;
 use Braunstetter\MenuBundle\Services\Menu;
 use Braunstetter\MenuBundle\Services\Resolver\MenuResolver;
@@ -20,7 +20,7 @@ class ResolverResultsTest extends TestCase
 
         $this->assertIsArray($menu);
         $this->assertSame(2, count($menu));
-        $this->assertContainsOnlyInstancesOf(MenuItem::class, $menu);
+        $this->assertContainsOnlyInstancesOf(Item::class, $menu);
         $this->assertTrue($menu[0]->hasChildren());
         $this->assertTrue($menu[1]->hasChildren());
     }
@@ -32,8 +32,8 @@ class ResolverResultsTest extends TestCase
 
         /** @var UrlMenuItem $item */
         $item = $menu[0]->getChildren()[0]->getChildren()[2];
-        $this->assertSame($item->linkAttr['target'], MenuItem::TARGET_BLANK);
-        $this->assertSame($item->getType(), MenuItem::TYPE_URL);
+        $this->assertSame($item->linkAttr['target'], Item::TARGET_BLANK);
+        $this->assertSame($item->getType(), Item::TYPE_URL);
         $this->assertNotNull($item->getUrl());
         $this->assertIsString($item->getUrl());
         $this->assertStringStartsWith('https://', $item->getUrl());

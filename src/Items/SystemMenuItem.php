@@ -4,16 +4,16 @@
 namespace Braunstetter\MenuBundle\Items;
 
 
-final class SystemMenuItem extends MenuItem
+final class SystemMenuItem extends Item
 {
 
-    public function __construct(string $label, string $routeName, array $routeParameters, ?string $icon)
+    public function __construct(string $label, string $routeName, array $routeParameters, ?string $icon, ?array $options = [])
     {
-        parent::__construct($label, $icon);
+        parent::__construct($label, $icon, $options);
 
         $this->setRouteName($routeName);
         $this->setRouteParameters($routeParameters);
-        $this->setType(MenuItem::TYPE_ROUTE);
+        $this->setType(Item::TYPE_ROUTE);
 
         $this->addClass('system');
     }

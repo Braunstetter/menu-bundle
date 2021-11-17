@@ -8,29 +8,32 @@ use Braunstetter\MenuBundle\Items\RouteMenuItem;
 use Braunstetter\MenuBundle\Items\SectionMenuItem;
 use Braunstetter\MenuBundle\Items\SystemMenuItem;
 use Braunstetter\MenuBundle\Items\UrlMenuItem;
-use Braunstetter\MenuBundle\Items\MenuItem as Item;
 
 final class MenuItem
 {
 
-    public static function linkToRoute(string $label, string $routeName, array $routeParameters = [], ?string $icon = null): RouteMenuItem
+    public static function linkToRoute(string $label, string $routeName, array $routeParameters = [], ?string $icon = null, ?array $options = []): RouteMenuItem
     {
-        return new RouteMenuItem($label, $routeName, $routeParameters, $icon);
+        return new RouteMenuItem($label, $routeName, $routeParameters, $icon, $options);
     }
 
-    public static function section(string $label, string $routeName, array $routeParameters = [], ?string $icon = null): SectionMenuItem
+    public static function linkToUrl(string $label, string $url, ?string $target = null, ?string $icon = null, ?array $options = []): UrlMenuItem
     {
-        return new SectionMenuItem($label, $routeName, $routeParameters, $icon);
+        if ($target) {
+            $options = array_replace($options, ['target' => $target]);
+        }
+
+        return new UrlMenuItem($label, $url, $icon, $options);
     }
 
-    public static function system(string $label, string $routeName, array $routeParameters = [], ?string $icon = null): SystemMenuItem
+    public static function section(string $label, string $routeName, array $routeParameters = [], ?string $icon = null, ?array $options = []): SectionMenuItem
     {
-        return new SystemMenuItem($label, $routeName, $routeParameters, $icon);
+        return new SectionMenuItem($label, $routeName, $routeParameters, $icon, $options);
     }
 
-    public static function linkToUrl(string $label, string $url, ?string $target = null, ?string $icon = null): UrlMenuItem
+    public static function system(string $label, string $routeName, array $routeParameters = [], ?string $icon = null, ?array $options = []): SystemMenuItem
     {
-        return new UrlMenuItem($label, $url, $icon, ['linkAttr' => ['target' => $target ?: Item::TARGET_DEFAULT]]);
+        return new SystemMenuItem($label, $routeName, $routeParameters, $icon, $options);
     }
 
 }
