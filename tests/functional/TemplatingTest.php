@@ -20,11 +20,13 @@ class TemplatingTest extends TestCase
 
         $this->assertTrue($client->getResponse()->isSuccessful());
         $this->assertSame(2, $client->getCrawler()->filter('nav')->count());
-        $this->assertSame(2, $client->getCrawler()->filter('nav > div.system > a')->count());
+        $this->assertSame(1, $client->getCrawler()->filter('nav > div.system > a')->count());
+        $this->assertSame(1, $client->getCrawler()->filter('nav > div.system > span')->count());
         $this->assertSame(2, $client->getCrawler()->filter('nav > div.system > div.section')->count());
 
 //        dump($client->getResponse()->getContent());
-        $this->assertSame(8, $client->getCrawler()->filter('nav > div.system > div.section a')->count());
+        $this->assertSame(1, $client->getCrawler()->filter('nav > div.system > div.section span')->count());
+        $this->assertSame(7, $client->getCrawler()->filter('nav > div.system > div.section a')->count());
     }
 
     public function test_route_triggers_active()
@@ -35,8 +37,10 @@ class TemplatingTest extends TestCase
         $this->assertTrue($client->getResponse()->isSuccessful());
 
         $this->assertSame(2, $client->getCrawler()->filter('nav')->count());
-        $this->assertSame(6, $client->getCrawler()->filter('nav')->first()->filter('a.active')->count());
-        $this->assertSame(9, $client->getCrawler()->filter('nav')->filter('a.active')->count());
+        $this->assertSame(4, $client->getCrawler()->filter('nav')->first()->filter('a.active')->count());
+        $this->assertSame(2, $client->getCrawler()->filter('nav')->first()->filter('span.active')->count());
+        $this->assertSame(5, $client->getCrawler()->filter('nav')->filter('a.active')->count());
+        $this->assertSame(4, $client->getCrawler()->filter('nav')->filter('span.active')->count());
     }
 
     public function test_route_to_url_renders_correctly()

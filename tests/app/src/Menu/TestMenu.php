@@ -12,10 +12,10 @@ class TestMenu extends Menu
 {
     public function define(): Traversable
     {
-        yield MenuItem::system('System', 'test', [], 'images/svg/system.svg')
+        yield MenuItem::system('System', null, [], 'images/svg/system.svg')
             ->setRouteParameter('name', 'test_menu')
             ->setChildren(function () {
-                yield MenuItem::section('Section', 'test_one', [], 'images/svg/thunder.svg')->setChildren(function () {
+                yield MenuItem::section('Section')->setChildren(function () {
                     yield MenuItem::linkToRoute('Site', 'test_two', [], '@Menu/svg/default_folder.svg');
                     yield MenuItem::linkToRoute('Dashboard', 'test_three')->setTarget(Item::TARGET_BLANK);
 

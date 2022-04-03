@@ -91,6 +91,14 @@ MenuItem::linkToRoute
 MenuItem::linkToUrl
 ```
 
+> There are additional `MenuItem::system` and `MenuItem::section`.
+> These are just convenient static methods to generate `MenuItem::linkToRoute` items with an `attr.class` set to system/section for rendering.
+> `MenuItem::system` and `MenuItem::section` both can have empty routes:
+
+```php
+yield MenuItem::system('System', null, [], 'images/svg/system.svg')
+```
+
 #### LinkToRoute
 
 ```php
@@ -138,9 +146,6 @@ yield MenuItem::system('System', 'test', [], 'images/svg/system.svg')
             yield MenuItem::linkToUrl('Shop', 'https://my-online-shop.com', Item::TARGET_BLANK, 'images/svg/thunder.svg');
     });
 ```
-
-> There are additional `MenuItem::system` and `MenuItem::section`.
-> These are just convenient static methods to generate `MenuItem::linkToRoute` items with an `attr.class` set to system/section for rendering.
 
 ### Custom menu items
 

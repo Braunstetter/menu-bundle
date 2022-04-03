@@ -4,7 +4,11 @@
     {% if entry.type is same as constant('Braunstetter\\MenuBundle\\Items\\Item::TYPE_URL') %}
         {% set path = entry.url %}
     {% else %}
-        {% set path = entry.routeParameters ? path(entry.routeName, entry.routeParameters) : path(entry.routeName) %}
+        {% if entry.routeName %}
+            {% set path = entry.routeParameters ? path(entry.routeName, entry.routeParameters) : path(entry.routeName) %}
+        {% else %}
+            {% set path = null %}
+        {% endif %}
     {% endif %}
 
     {% set label = entry.label %}
@@ -24,10 +28,13 @@
     {% endif %}
 
     <div {{ helper.renderAttr(attr) }}>
-        <a href="{{ path }}" {{ helper.renderAttr(linkAttr) }}>
+
+        {% set tag = path ? 'a' : 'span' %}
+
+        <{{ tag}} {% if path %}href="{{ path }}"{% endif %} {{ helper.renderAttr(linkAttr) }}>
             {{ block('icon') }}
             {{ label }}
-        </a>
+        </{{ tag }}>
 
         {% for entry in entry.children %}
             {{ block('item') }}

@@ -26,12 +26,12 @@ final class MenuItem
         return new UrlMenuItem($label, $url, $icon, $options);
     }
 
-    public static function section(string $label, string $routeName, array $routeParameters = [], ?string $icon = null, ?array $options = []): SectionMenuItem
+    public static function section(string $label, string|null $routeName = null, array $routeParameters = [], ?string $icon = null, ?array $options = []): SectionMenuItem
     {
         return new SectionMenuItem($label, $routeName, $routeParameters, $icon, $options);
     }
 
-    public static function system(string $label, string $routeName, array $routeParameters = [], ?string $icon = null, ?array $options = []): SystemMenuItem
+    public static function system(string $label, string|null $routeName = null, array $routeParameters = [], ?string $icon = null, ?array $options = []): SystemMenuItem
     {
         return new SystemMenuItem($label, $routeName, $routeParameters, $icon, $options);
     }

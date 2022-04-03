@@ -7,7 +7,7 @@ namespace Braunstetter\MenuBundle\Items;
 final class SystemMenuItem extends Item
 {
 
-    public function __construct(string $label, string $routeName, array $routeParameters, ?string $icon, ?array $options = [])
+    public function __construct(string $label, string|null $routeName, array $routeParameters, ?string $icon, ?array $options = [])
     {
         parent::__construct($label, $icon, $options);
 
