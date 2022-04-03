@@ -30,7 +30,7 @@
   "require-dev": {
     "symfony/test-pack": "^1.0",
     "matthiasnoback/symfony-dependency-injection-test": "^4.2",
-    "nyholm/symfony-bundle-test": "^1.8",
+    "nyholm/symfony-bundle-test": "1.8.1",
     "symfony/event-dispatcher": "^5.3"
   }
 }
