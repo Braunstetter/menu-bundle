@@ -13,7 +13,7 @@ class TemplatingTest extends TestCase
 {
     use TestKernelTrait;
 
-    public function test_menu_renders_and_shows_correct_items()
+    public function test_menu_renders_and_shows_correct_items(): void
     {
         $client = new KernelBrowser($this->kernel);
         $client->request('GET', '/test/test_menu');
@@ -29,7 +29,7 @@ class TemplatingTest extends TestCase
         $this->assertSame(7, $client->getCrawler()->filter('nav > div.system > div.section a')->count());
     }
 
-    public function test_route_triggers_active()
+    public function test_route_triggers_active(): void
     {
         $client = new KernelBrowser($this->kernel);
         $client->request('GET', 'test-two');
@@ -43,7 +43,7 @@ class TemplatingTest extends TestCase
         $this->assertSame(4, $client->getCrawler()->filter('nav')->filter('span.active')->count());
     }
 
-    public function test_route_to_url_renders_correctly()
+    public function test_route_to_url_renders_correctly(): void
     {
         $client = new KernelBrowser($this->kernel);
         $client->request('GET', 'test-two');
@@ -64,7 +64,7 @@ class TemplatingTest extends TestCase
             })->count());
     }
 
-    public function test_route_to_url_has_correct_target_attribute()
+    public function test_route_to_url_has_correct_target_attribute(): void
     {
         $client = new KernelBrowser($this->kernel);
         $client->request('GET', 'test-two');

@@ -6,5 +6,9 @@ namespace Braunstetter\MenuBundle\Contracts;
 
 interface MenuResolverInterface
 {
-    public function get($name, $context);
+    /**
+     * @param array<mixed> $context
+     * @return MenuItemInterface[]
+     */
+    public function get(string $name, array $context): array;
 }

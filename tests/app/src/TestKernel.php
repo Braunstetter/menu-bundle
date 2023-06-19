@@ -26,7 +26,7 @@ class TestKernel extends Kernel
         ];
     }
 
-    protected function configureContainer(ContainerConfigurator $container)
+    protected function configureContainer(ContainerConfigurator $container): void
     {
         $container->extension('framework', [
             'secret' => "F00",
@@ -41,7 +41,7 @@ class TestKernel extends Kernel
         $container->import('Resources/config/controller.test.yaml');
     }
 
-    protected function configureRoutes(RoutingConfigurator $routes)
+    protected function configureRoutes(RoutingConfigurator $routes): void
     {
         $routes->import(__DIR__ . '/Resources/config/routes.test.yaml');
     }

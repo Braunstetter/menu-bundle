@@ -17,7 +17,7 @@ class TestSubscriber implements EventSubscriberInterface
         return ['test.even_test' => 'addTestItems'];
     }
 
-    public function addTestItems(MenuEvent $event)
+    public function addTestItems(MenuEvent $event): void
     {
         $event->prepend(function () {
           yield MenuItem::system('Prepended Item', 'test') ->setRouteParameter('name', 'test_menu');

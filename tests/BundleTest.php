@@ -15,6 +15,9 @@ class BundleTest extends KernelTestCase
         return AppKernel::class;
     }
 
+    /**
+     * @param array<string, mixed> $options
+     */
     protected static function createKernel(array $options = []): KernelInterface
     {
         /**

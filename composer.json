@@ -9,12 +9,22 @@
       "email": "michaelbrauner82@gmail.com"
     }
   ],
+  "scripts": {
+    "test": [
+      "phpunit"
+    ],
+    "phpstan": [
+      "vendor/bin/phpstan analyse --level max src -vvv"
+    ]
+  },
   "require": {
     "php": "^8.0",
     "symfony/framework-bundle": "^5.0|^6.0",
     "symfony/twig-bundle": "^5.3|^6.0",
     "symfony/yaml": "^5.3|^6.0",
-    "symfony/string": "^5.3|^6.0"
+    "symfony/string": "^5.3|^6.0",
+    "webmozart/assert": "^1.11",
+    "braunstetter/helper": "^0.2.5"
 
   },
   "autoload": {
@@ -31,6 +41,7 @@
     "symfony/test-pack": "^1.0",
     "matthiasnoback/symfony-dependency-injection-test": "^4.2",
     "nyholm/symfony-bundle-test": "1.8.1",
-    "symfony/event-dispatcher": "^5.3"
+    "symfony/event-dispatcher": "^5.3",
+    "phpstan/phpstan": "^1.10"
   }
 }

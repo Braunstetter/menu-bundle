@@ -3,8 +3,11 @@
 
 namespace Braunstetter\MenuBundle\Items;
 
+use Braunstetter\Helper\Arr;
+use Braunstetter\MenuBundle\Contracts\MenuItemInterface;
 use Symfony\Component\String\UnicodeString;
 use Traversable;
+use Webmozart\Assert\Assert;
 
 trait MenuItemTrait
 {
@@ -12,15 +15,34 @@ trait MenuItemTrait
     private string $label;
     private ?string $icon;
     private ?string $routeName;
+
+    /**
+     * @var array<string, int|string>
+     */
     private ?array $routeParameters;
-    private array|Traversable $children;
+
+    /**
+     * @var iterable<MenuItemInterface>
+     */
+    private iterable $children;
     private bool $current;
     private bool $inActiveTrail;
     public string $handle;
     public string $url;
+
+    /**
+     * @var array<int|string,string|int|bool>
+     */
     public array $attr;
+
+    /**
+     * @var array<int|string,string|int|bool>
+     */
     public array $linkAttr;
 
+    /**
+     * @param array<string, mixed>|null $options
+     */
     public function __construct(string $label, ?string $icon, ?array $options = [])
     {
         $this->children = [];
@@ -30,11 +52,18 @@ trait MenuItemTrait
         $this->setLabel($label);
         $this->setIcon($icon);
 
-        $this->attr = $options['attr'] ?? [];
-        $this->linkAttr = $options['linkAttr'] ?? [];
+        $attr = $options['attr'] ?? [];
+        Assert::isArray($attr, 'The attr option must be an array, %s given.');
+        $this->setAttributes($attr);
+
+        $linkAttr = $options['linkAttr'] ?? [];
+        Assert::isArray($linkAttr, 'The linkAttr option must be an array, %s given.');
+        $this->setLinkAttributes($linkAttr);
 
         if (isset($options['target'])) {
-            $this->setTarget($options['target']);
+            $target = $options['target'];
+            Assert::string($target, 'The target option must be a string, %s given.');
+            $this->setTarget($target);
         }
 
         $this->handle = (new UnicodeString($this->label))->snake()->toString();
@@ -91,24 +120,33 @@ trait MenuItemTrait
         return $this;
     }
 
+    /**
+     * @return array<string, string|int>|null
+     */
     public function getRouteParameters(): ?array
     {
         return $this->routeParameters;
     }
 
-    public function setRouteParameter(string $parameterName, $parameterValue): static
+    public function setRouteParameter(string $parameterName, string|int $parameterValue): static
     {
         $this->routeParameters[$parameterName] = $parameterValue;
         return $this;
     }
 
+    /**
+     * @param array<string, string|int>|null $routeParameters
+     */
     public function setRouteParameters(?array $routeParameters): static
     {
         $this->routeParameters = $routeParameters;
         return $this;
     }
 
-    public function getChildren(): array|Traversable
+    /**
+     * @return MenuItemInterface[]|iterable<MenuItemInterface>
+     */
+    public function getChildren(): iterable
     {
         if (!is_array($this->children)) {
             $this->children = iterator_to_array($this->children, false);
@@ -119,7 +157,9 @@ trait MenuItemTrait
 
     public function setChildren(callable $children): static
     {
-        $this->children = call_user_func($children);
+        $result = call_user_func($children);
+        Assert::isIterable($result);
+        $this->children = $result;
         return $this;
     }
 
@@ -156,9 +196,6 @@ trait MenuItemTrait
         return $this->inActiveTrail;
     }
 
-    /**
-     * @param bool $inActiveTrail
-     */
     public function setInActiveTrail(bool $inActiveTrail): void
     {
         $this->inActiveTrail = $inActiveTrail;
@@ -175,11 +212,42 @@ trait MenuItemTrait
         return $this;
     }
 
-    public function addClass(string $class)
+    public function addClass(string $class): void
     {
-        $this->attr = array_replace([
-            'class' => trim(implode(' ', [$class, $this->attr['class'] ?? '']))
-        ], $this->attr);
+        $this->attr = Arr::attachClass($this->attr, $class);
     }
 
+    /**
+     * @param array<string|int, string|int|bool> $attr
+     */
+    public function setAttributes(array $attr): void
+    {
+        foreach ($attr as $value) {
+            Assert::oneOf(gettype($value), ['string', 'integer', 'boolean']);
+        }
+
+        $this->attr = $attr;
+    }
+
+    /**
+     * @param array<string|int, string|int|bool> $attr
+     */
+    public function setLinkAttributes(array $attr): void
+    {
+        foreach ($attr as $value) {
+            Assert::oneOf(gettype($value), ['string', 'integer', 'boolean']);
+        }
+
+        $this->linkAttr = $attr;
+    }
+
+    public function getAttr(): array
+    {
+        return $this->attr;
+    }
+
+    public function getLinkAttr(): array
+    {
+        return $this->linkAttr;
+    }
 }

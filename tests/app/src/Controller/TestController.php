@@ -27,7 +27,7 @@ class TestController
      * @throws RuntimeError
      * @throws LoaderError
      */
-    public function index($name): Response
+    public function index(string $name): Response
     {
         return (new Response())
             ->setContent($this->twig->render('test.html.twig', ['name' => $name]));

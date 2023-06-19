@@ -4,6 +4,8 @@
 namespace Braunstetter\MenuBundle\Services;
 
 
+use Braunstetter\MenuBundle\Contracts\MenuInterface;
+use Braunstetter\MenuBundle\Contracts\MenuItemInterface;
 use Braunstetter\MenuBundle\Services\Resolver\BreadcrumbsResolver;
 use Braunstetter\MenuBundle\Services\Resolver\MenuResolver;
 use Twig\Environment;
@@ -29,15 +31,12 @@ class Menu
     }
 
     /**
-     * @param Environment $templating
-     * @param $context
-     * @param $name
-     * @return string
+     * @param array<string, mixed> $context
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
      */
-    public function getMenu(Environment $templating, $context, $name): string
+    public function getMenu(Environment $templating, array $context, string $name): string
     {
         return $templating->render('@Menu/menu.html.twig',
             [
@@ -47,15 +46,12 @@ class Menu
     }
 
     /**
-     * @param Environment $templating
-     * @param $context
-     * @param $name
-     * @return string
+     * @param array<string, mixed> $context
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
      */
-    public function getBreadcrumbs(Environment $templating, $context, $name): string
+    public function getBreadcrumbs(Environment $templating, array $context, string $name): string
     {
         return $templating->render('@Menu/breadcrumb_menu.html.twig',
             [
@@ -64,12 +60,20 @@ class Menu
         );
     }
 
-    public function getMenuResult($context, $name): array
+    /**
+     * @param array<string, mixed> $context
+     * @return array<MenuItemInterface>
+     */
+    public function getMenuResult(array $context, string $name): array
     {
         return $this->menuResolver->get($name, $context);
     }
 
-    public function getBreadcrumbsResult($context, $name): array
+    /**
+     * @param array<string, mixed> $context
+     * @return array<MenuItemInterface>
+     */
+    public function getBreadcrumbsResult(array $context, string $name): array
     {
         return $this->breadcrumbsResolver->get($name, $context);
     }

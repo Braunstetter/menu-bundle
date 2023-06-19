@@ -17,19 +17,19 @@ class BundleExtensionTest extends AbstractExtensionTestCase
         return [new MenuBundleExtension()];
     }
 
-    public function test_twig_extension_gets_loaded()
+    public function test_twig_extension_gets_loaded(): void
     {
         $this->load();
         $this->assertContainerBuilderHasService('Braunstetter\MenuBundle\Twig\Extension');
     }
 
-    public function test_tag_gets_registered()
+    public function test_tag_gets_registered(): void
     {
         $this->load();
         $this->assertArrayHasKey(MenuInterface::class, $this->container->getAutoconfiguredInstanceof());
     }
 
-    public function test_all_services_gets_loaded()
+    public function test_all_services_gets_loaded(): void
     {
         $this->load();
         $this->assertContainerBuilderHasService(AbstractMenuResolver::class);

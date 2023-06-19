@@ -15,14 +15,11 @@ class TestEventMenu extends Menu
 
     public function __construct(EventDispatcherInterface $eventDispatcher)
     {
-        parent::__construct();
-
         $this->eventDispatcher = $eventDispatcher;
     }
 
     public function define(): Traversable
     {
-
         $items = function () {
             yield MenuItem::system('System', 'test', [], 'images/svg/system.svg')
                 ->setRouteParameter('name', 'test_menu')

@@ -4,14 +4,20 @@
 namespace Braunstetter\MenuBundle\Services\Resolver;
 
 
+use Braunstetter\MenuBundle\Contracts\MenuInterface;
 use Braunstetter\MenuBundle\Contracts\MenuItemInterface;
 use Braunstetter\MenuBundle\Contracts\MenuResolverInterface;
-use Braunstetter\MenuBundle\Items\Item;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\String\UnicodeString;
+use Webmozart\Assert\Assert;
 
 abstract class AbstractMenuResolver implements MenuResolverInterface
 {
+
+    /**
+     * @var iterable<MenuInterface>
+     */
     protected iterable $entries;
     private RequestStack $requestStack;
     private UrlGeneratorInterface $generator;
@@ -19,6 +25,8 @@ abstract class AbstractMenuResolver implements MenuResolverInterface
 
     /**
      * AbstractMenuResolver constructor.
+     *
+     * @param iterable<MenuInterface> $entries
      */
     public function __construct(iterable $entries, RequestStack $requestStack, UrlGeneratorInterface $generator)
     {
@@ -27,7 +35,7 @@ abstract class AbstractMenuResolver implements MenuResolverInterface
         $this->generator = $generator;
     }
 
-    protected function matches(Item $item): bool
+    protected function matches(MenuItemInterface $item): bool
     {
         if ($this->selectedSubnavItemMatches($item)) {
             $item->setCurrent(true);
@@ -48,7 +56,7 @@ abstract class AbstractMenuResolver implements MenuResolverInterface
         return false;
     }
 
-    protected function oneOfTheChildrenMatches(Item $item): bool
+    protected function oneOfTheChildrenMatches(MenuItemInterface $item): bool
     {
         if (!empty($item->getChildren())) {
 
@@ -70,29 +78,44 @@ abstract class AbstractMenuResolver implements MenuResolverInterface
         return false;
     }
 
-    /**
-     * @param Item $item
-     * @return bool
-     */
     private function selectedSubnavItemMatches(MenuItemInterface $item): bool
     {
-
         if (!isset($this->selectedSubnavItem)) {
             return false;
         }
 
-        return $item->getHandle() === $this->selectedSubnavItem;
+        return $this->getHandle($item) === $this->selectedSubnavItem;
     }
 
     /**
-     * @param $context
-     * @return mixed
+     * @param array<string, mixed> $context
      */
-    protected function setSubnavItem($context): void
+    protected function setSubnavItem(array $context): void
     {
         if (array_key_exists('selectedSubnavItem', $context)) {
-            $this->selectedSubnavItem = $context['selectedSubnavItem'];
+            $selectedSubnavItem = $context['selectedSubnavItem'];
+            Assert::string($selectedSubnavItem);
+            $this->selectedSubnavItem = $selectedSubnavItem;
         }
+    }
+
+    protected function getHandle(MenuInterface|MenuItemInterface $class): string
+    {
+        if (method_exists($class, 'getHandle')) {
+            return $class->getHandle();
+        }
+
+        if ($class instanceof MenuItemInterface) {
+            return $this->toSnakeCase($class->getLabel());
+        }
+
+        $className = (new \ReflectionClass($class))->getShortName();
+        return $this->toSnakeCase($className);
+    }
+
+    private function toSnakeCase(string $string): string
+    {
+        return (new UnicodeString($string))->snake()->toString();
     }
 
 }
