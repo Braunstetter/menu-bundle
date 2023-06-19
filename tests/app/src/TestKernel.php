@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Braunstetter\MenuBundle\Test\app\src;
 
 use Braunstetter\MenuBundle\MenuBundle;
@@ -14,27 +16,24 @@ class TestKernel extends Kernel
 {
     use MicroKernelTrait;
 
-    /**
-     * @inheritDoc
-     */
     public function registerBundles(): iterable
     {
-        return [
-            new FrameworkBundle(),
-            new TwigBundle(),
-            new MenuBundle()
-        ];
+        return [new FrameworkBundle(), new TwigBundle(), new MenuBundle()];
     }
 
     protected function configureContainer(ContainerConfigurator $container): void
     {
         $container->extension('framework', [
-            'secret' => "F00",
-            'router' => ['utf8' => true]
+            'secret' => 'F00',
+            'router' => [
+                'utf8' => true,
+            ],
         ]);
 
         $container->extension('twig', [
-            'paths' => ['tests/app/src/Resources/views' => '__main__']
+            'paths' => [
+                'tests/app/src/Resources/views' => '__main__',
+            ],
         ]);
 
         $container->import('Resources/config/services.test.yaml');
@@ -45,5 +44,4 @@ class TestKernel extends Kernel
     {
         $routes->import(__DIR__ . '/Resources/config/routes.test.yaml');
     }
-
 }

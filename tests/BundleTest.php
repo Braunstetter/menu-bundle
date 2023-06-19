@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Braunstetter\MenuBundle\Test;
 
 use Braunstetter\MenuBundle\DependencyInjection\MenuBundleExtension;
@@ -10,6 +12,14 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class BundleTest extends KernelTestCase
 {
+    public function testInitBundle(): void
+    {
+        self::bootKernel();
+        $bundle = self::$kernel->getBundle('MenuBundle');
+        $this->assertInstanceOf(MenuBundle::class, $bundle);
+        $this->assertInstanceOf(MenuBundleExtension::class, $bundle->getContainerExtension());
+    }
+
     protected static function getKernelClass(): string
     {
         return AppKernel::class;
@@ -20,21 +30,10 @@ class BundleTest extends KernelTestCase
      */
     protected static function createKernel(array $options = []): KernelInterface
     {
-        /**
-         * @var AppKernel $kernel
-         */
+        /** @var AppKernel $kernel */
         $kernel = parent::createKernel($options);
         $kernel->addBundle(MenuBundle::class);
 
         return $kernel;
     }
-
-    public function testInitBundle(): void
-    {
-        self::bootKernel();
-        $bundle = self::$kernel->getBundle('MenuBundle');
-        $this->assertInstanceOf(MenuBundle::class, $bundle);
-        $this->assertInstanceOf(MenuBundleExtension::class, $bundle->getContainerExtension());
-    }
-
 }

@@ -1,29 +1,20 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Braunstetter\MenuBundle\Services;
 
-
-use Braunstetter\MenuBundle\Contracts\MenuInterface;
 use Braunstetter\MenuBundle\Contracts\MenuItemInterface;
 use Braunstetter\MenuBundle\Services\Resolver\BreadcrumbsResolver;
 use Braunstetter\MenuBundle\Services\Resolver\MenuResolver;
 use Twig\Environment;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 class Menu
 {
-
     private MenuResolver $menuResolver;
+
     private BreadcrumbsResolver $breadcrumbsResolver;
 
-    /**
-     * Menu constructor.
-     * @param MenuResolver $menuResolver
-     * @param BreadcrumbsResolver $breadcrumbsResolver
-     */
     public function __construct(MenuResolver $menuResolver, BreadcrumbsResolver $breadcrumbsResolver)
     {
         $this->menuResolver = $menuResolver;
@@ -32,30 +23,26 @@ class Menu
 
     /**
      * @param array<string, mixed> $context
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
      */
     public function getMenu(Environment $templating, array $context, string $name): string
     {
-        return $templating->render('@Menu/menu.html.twig',
+        return $templating->render(
+            '@Menu/menu.html.twig',
             [
-                'menus' => $this->menuResolver->get($name, $context)
+                'menus' => $this->menuResolver->get($name, $context),
             ]
         );
     }
 
     /**
      * @param array<string, mixed> $context
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
      */
     public function getBreadcrumbs(Environment $templating, array $context, string $name): string
     {
-        return $templating->render('@Menu/breadcrumb_menu.html.twig',
+        return $templating->render(
+            '@Menu/breadcrumb_menu.html.twig',
             [
-                'menus' => $this->breadcrumbsResolver->get($name, $context)
+                'menus' => $this->breadcrumbsResolver->get($name, $context),
             ]
         );
     }
@@ -77,5 +64,4 @@ class Menu
     {
         return $this->breadcrumbsResolver->get($name, $context);
     }
-
 }

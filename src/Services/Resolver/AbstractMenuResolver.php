@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Braunstetter\MenuBundle\Services\Resolver;
-
 
 use Braunstetter\MenuBundle\Contracts\MenuInterface;
 use Braunstetter\MenuBundle\Contracts\MenuItemInterface;
@@ -14,14 +14,16 @@ use Webmozart\Assert\Assert;
 
 abstract class AbstractMenuResolver implements MenuResolverInterface
 {
-
     /**
      * @var iterable<MenuInterface>
      */
     protected iterable $entries;
-    private RequestStack $requestStack;
-    private UrlGeneratorInterface $generator;
+
     protected ?string $selectedSubnavItem = null;
+
+    private RequestStack $requestStack;
+
+    private UrlGeneratorInterface $generator;
 
     /**
      * @param iterable<MenuInterface> $entries
@@ -40,7 +42,8 @@ abstract class AbstractMenuResolver implements MenuResolverInterface
             return true;
         }
 
-        if (($routeName = $item->getRouteName()) === null) {
+        $routeName = $item->getRouteName();
+        if ($routeName === null) {
             return false;
         }
 
@@ -56,10 +59,8 @@ abstract class AbstractMenuResolver implements MenuResolverInterface
 
     protected function oneOfTheChildrenMatches(MenuItemInterface $item): bool
     {
-        if (!empty($item->getChildren())) {
-
+        if (! empty($item->getChildren())) {
             foreach ($item->getChildren() as $subItem) {
-
                 if ($this->matches($subItem)) {
                     $item->setInActiveTrail(true);
                     return true;
@@ -69,20 +70,10 @@ abstract class AbstractMenuResolver implements MenuResolverInterface
                     $item->setInActiveTrail(true);
                     return true;
                 }
-
             }
         }
 
         return false;
-    }
-
-    private function selectedSubnavItemMatches(MenuItemInterface $item): bool
-    {
-        if (!isset($this->selectedSubnavItem)) {
-            return false;
-        }
-
-        return $this->getHandle($item) === $this->selectedSubnavItem;
     }
 
     /**
@@ -105,17 +96,29 @@ abstract class AbstractMenuResolver implements MenuResolverInterface
             return $handle;
         }
 
-        if ($class instanceof MenuItemInterface && ($label = $class->getLabel()) !== null) {
-            return $this->toSnakeCase($label);
+        if ($class instanceof MenuItemInterface) {
+            $label = $class->getLabel();
+            if ($label !== null) {
+                return $this->toSnakeCase($label);
+            }
         }
 
         $className = (new \ReflectionClass($class))->getShortName();
         return $this->toSnakeCase($className);
     }
 
-    private function toSnakeCase(string $string): string
+    private function selectedSubnavItemMatches(MenuItemInterface $item): bool
     {
-        return (new UnicodeString($string))->snake()->toString();
+        if (! isset($this->selectedSubnavItem)) {
+            return false;
+        }
+
+        return $this->getHandle($item) === $this->selectedSubnavItem;
     }
 
+    private function toSnakeCase(string $string): string
+    {
+        return (new UnicodeString($string))->snake()
+            ->toString();
+    }
 }

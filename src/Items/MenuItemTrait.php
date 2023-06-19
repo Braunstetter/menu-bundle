@@ -1,32 +1,16 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Braunstetter\MenuBundle\Items;
 
 use Braunstetter\Helper\Arr;
 use Braunstetter\MenuBundle\Contracts\MenuItemInterface;
-use Symfony\Component\String\UnicodeString;
 use Traversable;
 use Webmozart\Assert\Assert;
 
 trait MenuItemTrait
 {
-    private ?string $type = null;
-    private ?string $label = null;
-    private ?string $icon = null;
-    private ?string $routeName = null;
-
-    /**
-     * @var array<string, int|string>
-     */
-    private ?array $routeParameters = null;
-
-    /**
-     * @var MenuItemInterface[]|iterable<MenuItemInterface>
-     */
-    private iterable $children = [];
-    private bool $current = false;
-    private bool $inActiveTrail = false;
     public ?string $url = null;
 
     /**
@@ -38,6 +22,28 @@ trait MenuItemTrait
      * @var array<int|string, bool|int|string>
      */
     public array $linkAttr = [];
+
+    private ?string $type = null;
+
+    private ?string $label = null;
+
+    private ?string $icon = null;
+
+    private ?string $routeName = null;
+
+    /**
+     * @var array<string, int|string>
+     */
+    private ?array $routeParameters = null;
+
+    /**
+     * @var MenuItemInterface[]|iterable<MenuItemInterface>
+     */
+    private iterable $children = [];
+
+    private bool $current = false;
+
+    private bool $inActiveTrail = false;
 
     /**
      * @param array<string, mixed>|null $options
@@ -158,28 +164,19 @@ trait MenuItemTrait
             $this->children = iterator_to_array($this->children);
         }
 
-        return !empty($this->children);
+        return ! empty($this->children);
     }
 
-    /**
-     * @return bool
-     */
     public function isCurrent(): bool
     {
         return $this->current;
     }
 
-    /**
-     * @param bool $current
-     */
     public function setCurrent(bool $current): void
     {
         $this->current = $current;
     }
 
-    /**
-     * @return bool
-     */
     public function isInActiveTrail(): bool
     {
         return $this->inActiveTrail;
@@ -197,7 +194,9 @@ trait MenuItemTrait
 
     public function setTarget(string $target): static
     {
-        $this->linkAttr = array_replace($this->linkAttr, ['target' => $target]);
+        $this->linkAttr = array_replace($this->linkAttr, [
+            'target' => $target,
+        ]);
         return $this;
     }
 

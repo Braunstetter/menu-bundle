@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Braunstetter\MenuBundle\Test\functional;
 
 use Braunstetter\MenuBundle\Items\Item;
@@ -9,12 +11,11 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\DomCrawler\Crawler;
 use Webmozart\Assert\Assert;
 
-
 class TemplatingTest extends TestCase
 {
     use TestKernelTrait;
 
-    public function test_menu_renders_and_shows_correct_items(): void
+    public function testMenuRendersAndShowsCorrectItems(): void
     {
         Assert::notNull($this->kernel);
         $client = new KernelBrowser($this->kernel);
@@ -26,12 +27,12 @@ class TemplatingTest extends TestCase
         $this->assertSame(1, $client->getCrawler()->filter('nav > div.system > span')->count());
         $this->assertSame(2, $client->getCrawler()->filter('nav > div.system > div.section')->count());
 
-//        dump($client->getResponse()->getContent());
+        //        dump($client->getResponse()->getContent());
         $this->assertSame(1, $client->getCrawler()->filter('nav > div.system > div.section span')->count());
         $this->assertSame(7, $client->getCrawler()->filter('nav > div.system > div.section a')->count());
     }
 
-    public function test_route_triggers_active(): void
+    public function testRouteTriggersActive(): void
     {
         Assert::notNull($this->kernel);
         $client = new KernelBrowser($this->kernel);
@@ -46,7 +47,7 @@ class TemplatingTest extends TestCase
         $this->assertSame(4, $client->getCrawler()->filter('nav')->filter('span.active')->count());
     }
 
-    public function test_route_to_url_renders_correctly(): void
+    public function testRouteToUrlRendersCorrectly(): void
     {
         Assert::notNull($this->kernel);
         $client = new KernelBrowser($this->kernel);
@@ -56,17 +57,21 @@ class TemplatingTest extends TestCase
         $this->assertSame(2, $client->getCrawler()->filter('nav')->count());
 
         $this->assertSame(1, $client->getCrawler()->filter('nav')->first()
-            ->filter('a[target=_blank]')->reduce(function (Crawler $item) {
-                return $item->link()->getUri() === 'https://blubber.com';
+            ->filter('a[target=_blank]')
+            ->reduce(function (Crawler $item) {
+                return $item->link()
+                    ->getUri() === 'https://blubber.com';
             })->count());
 
         $this->assertSame(1, $client->getCrawler()->filter('nav')->first()
-            ->filter('a[target=_parent]')->reduce(function (Crawler $item) {
-                return $item->link()->getUri() === 'https://custom-target-by-linkattr.com';
+            ->filter('a[target=_parent]')
+            ->reduce(function (Crawler $item) {
+                return $item->link()
+                    ->getUri() === 'https://custom-target-by-linkattr.com';
             })->count());
     }
 
-    public function test_route_to_url_has_correct_target_attribute(): void
+    public function testRouteToUrlHasCorrectTargetAttribute(): void
     {
         Assert::notNull($this->kernel);
         $client = new KernelBrowser($this->kernel);
@@ -74,8 +79,11 @@ class TemplatingTest extends TestCase
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
-        $routeToUrlItem = $client->getCrawler()->filter('nav')->first()
-            ->filter('a')->reduce(fn(Crawler $item) => $item->link()->getUri() === 'https://blubber.com');
+        $routeToUrlItem = $client->getCrawler()
+            ->filter('nav')
+            ->first()
+            ->filter('a')
+            ->reduce(fn (Crawler $item) => $item->link()->getUri() === 'https://blubber.com');
 
         $this->assertSame($routeToUrlItem->link()->getNode()->getAttribute('target'), Item::TARGET_BLANK);
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Braunstetter\MenuBundle;
 
 use Braunstetter\MenuBundle\DependencyInjection\MenuBundleExtension;
@@ -10,10 +12,14 @@ class MenuBundle extends Bundle
 {
     public function getContainerExtension(): ?MenuBundleExtension
     {
-        if (null === $this->extension) {
+        if ($this->extension === null) {
             $this->extension = new MenuBundleExtension();
         }
-        Assert::isInstanceOf($this->extension, MenuBundleExtension::class, 'The extension must be an instance of MenuBundleExtension');
+        Assert::isInstanceOf(
+            $this->extension,
+            MenuBundleExtension::class,
+            'The extension must be an instance of MenuBundleExtension'
+        );
         return $this->extension;
     }
 }

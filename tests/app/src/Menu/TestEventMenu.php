@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Braunstetter\MenuBundle\Test\app\src\Menu;
 
 use Braunstetter\MenuBundle\Events\MenuEvent;
@@ -11,7 +13,6 @@ use Traversable;
 
 class TestEventMenu extends Menu
 {
-
     private EventDispatcherInterface $eventDispatcher;
 
     public function __construct(EventDispatcherInterface $eventDispatcher)
@@ -25,10 +26,12 @@ class TestEventMenu extends Menu
             yield MenuItem::system('System', 'test', [], 'images/svg/system.svg')
                 ->setRouteParameter('name', 'test_menu')
                 ->setChildren(function () {
-                    yield MenuItem::section('Section', 'test_one', [], 'images/svg/thunder.svg')->setChildren(function () {
-                        yield MenuItem::linkToRoute('Site', 'test_two', [], '@Menu/svg/default_folder.svg');
-                        yield MenuItem::linkToRoute('Dashboard', 'test_three');
-                    });
+                    yield MenuItem::section('Section', 'test_one', [], 'images/svg/thunder.svg')->setChildren(
+                        function () {
+                            yield MenuItem::linkToRoute('Site', 'test_two', [], '@Menu/svg/default_folder.svg');
+                            yield MenuItem::linkToRoute('Dashboard', 'test_three');
+                        }
+                    );
                 });
         };
 

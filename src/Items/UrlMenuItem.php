@@ -1,11 +1,11 @@
 <?php
 
-namespace Braunstetter\MenuBundle\Items;
+declare(strict_types=1);
 
+namespace Braunstetter\MenuBundle\Items;
 
 final class UrlMenuItem extends Item
 {
-
     /**
      * @param array<string, mixed> $options
      */
@@ -15,5 +15,4 @@ final class UrlMenuItem extends Item
         $this->url = $url;
         $this->setType(Item::TYPE_URL);
     }
-
 }

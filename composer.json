@@ -44,6 +44,7 @@
     "symfony/event-dispatcher": "^5.3",
     "phpstan/phpstan": "^1.10",
     "vimeo/psalm": "^5.12",
-    "psalm/plugin-phpunit": "^0.18.4"
+    "psalm/plugin-phpunit": "^0.18.4",
+    "symplify/easy-coding-standard": "^11.4"
   }
 }

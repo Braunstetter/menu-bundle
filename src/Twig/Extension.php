@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Braunstetter\MenuBundle\Twig;
-
 
 use Braunstetter\MenuBundle\Services\Menu;
 use Twig\Extension\AbstractExtension;
@@ -20,11 +20,23 @@ class Extension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('menu', [$this->menu, 'getMenu'], ['is_safe' => ['html'], 'needs_context' => true, 'needs_environment' => true]),
-            new TwigFunction('menu_result', [$this->menu, 'getMenuResult'], ['needs_context' => true]),
-            new TwigFunction('breadcrumbs', [$this->menu, 'getBreadcrumbs'], ['is_safe' => ['html'], 'needs_context' => true, 'needs_environment' => true]),
-            new TwigFunction('breadcrumbs_result', [$this->menu, 'getBreadcrumbsResult'], ['is_safe' => ['html'], 'needs_context' => true])
+            new TwigFunction('menu', [$this->menu, 'getMenu'], [
+                'is_safe' => ['html'],
+                'needs_context' => true,
+                'needs_environment' => true,
+            ]),
+            new TwigFunction('menu_result', [$this->menu, 'getMenuResult'], [
+                'needs_context' => true,
+            ]),
+            new TwigFunction('breadcrumbs', [$this->menu, 'getBreadcrumbs'], [
+                'is_safe' => ['html'],
+                'needs_context' => true,
+                'needs_environment' => true,
+            ]),
+            new TwigFunction('breadcrumbs_result', [$this->menu, 'getBreadcrumbsResult'], [
+                'is_safe' => ['html'],
+                'needs_context' => true,
+            ]),
         ];
     }
-
 }

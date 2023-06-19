@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Braunstetter\MenuBundle\Test;
 
 use Braunstetter\MenuBundle\Contracts\MenuInterface;
@@ -12,29 +14,29 @@ use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 
 class BundleExtensionTest extends AbstractExtensionTestCase
 {
-    protected function getContainerExtensions(): array
-    {
-        return [new MenuBundleExtension()];
-    }
-
-    public function test_twig_extension_gets_loaded(): void
+    public function testTwigExtensionGetsLoaded(): void
     {
         $this->load();
         $this->assertContainerBuilderHasService('Braunstetter\MenuBundle\Twig\Extension');
     }
 
-    public function test_tag_gets_registered(): void
+    public function testTagGetsRegistered(): void
     {
         $this->load();
         $this->assertArrayHasKey(MenuInterface::class, $this->container->getAutoconfiguredInstanceof());
     }
 
-    public function test_all_services_gets_loaded(): void
+    public function testAllServicesGetsLoaded(): void
     {
         $this->load();
         $this->assertContainerBuilderHasService(AbstractMenuResolver::class);
         $this->assertContainerBuilderHasService(MenuResolver::class);
         $this->assertContainerBuilderHasService(BreadcrumbsResolver::class);
         $this->assertContainerBuilderHasService(Menu::class);
+    }
+
+    protected function getContainerExtensions(): array
+    {
+        return [new MenuBundleExtension()];
     }
 }

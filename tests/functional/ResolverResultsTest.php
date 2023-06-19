@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Braunstetter\MenuBundle\Test\functional;
 
 use Braunstetter\MenuBundle\Contracts\MenuItemInterface;
 use Braunstetter\MenuBundle\Items\Item;
-use Braunstetter\MenuBundle\Items\UrlMenuItem;
 use Braunstetter\MenuBundle\Services\Menu;
 use Braunstetter\MenuBundle\Services\Resolver\MenuResolver;
 use Braunstetter\MenuBundle\Test\trait\TestKernelTrait;
@@ -15,11 +16,12 @@ class ResolverResultsTest extends TestCase
 {
     use TestKernelTrait;
 
-    public function test_menu_resolver_returns_correct_output(): void
+    public function testMenuResolverReturnsCorrectOutput(): void
     {
         Assert::notNull($this->kernel);
         /** @var MenuResolver $menuResolver */
-        $menuResolver = $this->kernel->getContainer()->get(MenuResolver::class);
+        $menuResolver = $this->kernel->getContainer()
+            ->get(MenuResolver::class);
 
         /** @var MenuItemInterface[] $menu */
         $menu = $menuResolver->get('test_menu', []);
@@ -30,11 +32,12 @@ class ResolverResultsTest extends TestCase
         $this->assertTrue($menu[1]->hasChildren());
     }
 
-    public function test_menu_resolver_return_correct_url_menu_item_data(): void
+    public function testMenuResolverReturnCorrectUrlMenuItemData(): void
     {
         Assert::notNull($this->kernel);
         /** @var MenuResolver $menuResolver */
-        $menuResolver = $this->kernel->getContainer()->get(MenuResolver::class);
+        $menuResolver = $this->kernel->getContainer()
+            ->get(MenuResolver::class);
 
         $menu = $menuResolver->get('test_menu', []);
 
@@ -49,20 +52,25 @@ class ResolverResultsTest extends TestCase
         $this->assertStringStartsWith('https://', $url);
     }
 
-    public function test_breadcrumb_resolver_returns_correct_output(): void
+    public function testBreadcrumbResolverReturnsCorrectOutput(): void
     {
         Assert::notNull($this->kernel);
         /** @var Menu $menuService */
-        $menuService = $this->kernel->getContainer()->get(Menu::class);
+        $menuService = $this->kernel->getContainer()
+            ->get(Menu::class);
 
         $menu = $menuService->getBreadcrumbsResult([], 'test_menu');
         $this->assertSame(0, count($menu));
 
-        $menu = $menuService->getBreadcrumbsResult(['selectedSubnavItem' => 'dashboard'], 'test_menu');
+        $menu = $menuService->getBreadcrumbsResult([
+            'selectedSubnavItem' => 'dashboard',
+        ], 'test_menu');
         $this->assertSame(1, count($menu));
         $this->assertTrue($menu[0]->hasChildren());
 
-        $menu = $menuService->getBreadcrumbsResult(['selectedSubnavItem' => 'system'], 'test_menu');
+        $menu = $menuService->getBreadcrumbsResult([
+            'selectedSubnavItem' => 'system',
+        ], 'test_menu');
 
         $this->assertSame(1, count($menu));
         $this->assertTrue($menu[0]->hasChildren());
@@ -78,5 +86,4 @@ class ResolverResultsTest extends TestCase
         Assert::isArray($childrenOfFirstItem);
         return $childrenOfFirstItem;
     }
-
 }

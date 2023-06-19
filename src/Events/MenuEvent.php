@@ -1,13 +1,12 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Braunstetter\MenuBundle\Events;
-
 
 use Braunstetter\MenuBundle\Contracts\MenuItemInterface;
 use Closure;
 use Symfony\Contracts\EventDispatcher\Event;
-use Webmozart\Assert\Assert;
 
 class MenuEvent extends Event
 {
@@ -16,10 +15,6 @@ class MenuEvent extends Event
      */
     public iterable $items;
 
-    /**
-     * MenuEvent constructor.
-     * @param Closure $items
-     */
     public function __construct(Closure $items)
     {
         /** @var iterable<MenuItemInterface> $result */
