@@ -7,7 +7,7 @@ use Braunstetter\MenuBundle\Test\app\src\TestKernel;
 trait TestKernelTrait
 {
 
-    protected Testkernel $kernel;
+    protected ?Testkernel $kernel = null;
 
     protected function setUp(): void
     {

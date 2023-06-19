@@ -14,6 +14,7 @@ class MenuEventTest extends TestCase
 
     public function test_event_triggers(): void
     {
+        Assert::notNull($this->kernel);
         $menuService = $this->kernel->getContainer()->get(Menu::class);
         $this->assertInstanceOf(Menu::class, $menuService);
         $results = $menuService->getMenuResult([],'test_event_menu');

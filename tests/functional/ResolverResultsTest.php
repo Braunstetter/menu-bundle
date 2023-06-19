@@ -17,13 +17,13 @@ class ResolverResultsTest extends TestCase
 
     public function test_menu_resolver_returns_correct_output(): void
     {
+        Assert::notNull($this->kernel);
         /** @var MenuResolver $menuResolver */
         $menuResolver = $this->kernel->getContainer()->get(MenuResolver::class);
 
         /** @var MenuItemInterface[] $menu */
         $menu = $menuResolver->get('test_menu', []);
 
-        $this->assertIsArray($menu);
         $this->assertSame(2, count($menu));
         $this->assertContainsOnlyInstancesOf(Item::class, $menu);
         $this->assertTrue($menu[0]->hasChildren());
@@ -32,40 +32,38 @@ class ResolverResultsTest extends TestCase
 
     public function test_menu_resolver_return_correct_url_menu_item_data(): void
     {
+        Assert::notNull($this->kernel);
         /** @var MenuResolver $menuResolver */
         $menuResolver = $this->kernel->getContainer()->get(MenuResolver::class);
+
         $menu = $menuResolver->get('test_menu', []);
 
         $childrenOfFirstItem = $this->getChildrenOfFirstItem($menu);
-        Assert::isArray($childrenOfFirstItem);
-
         $childrenOfSecondItem = $this->getChildrenOfFirstItem($childrenOfFirstItem);
         $item = $childrenOfSecondItem[2];
-
+        $url = $item->getUrl();
         $this->assertSame($item->getLinkAttr()['target'], Item::TARGET_BLANK);
         $this->assertSame($item->getType(), Item::TYPE_URL);
-        $this->assertNotNull($item->getUrl());
+        $this->assertNotNull($url);
         $this->assertIsString($item->getUrl());
-        $this->assertStringStartsWith('https://', $item->getUrl());
+        $this->assertStringStartsWith('https://', $url);
     }
 
     public function test_breadcrumb_resolver_returns_correct_output(): void
     {
+        Assert::notNull($this->kernel);
         /** @var Menu $menuService */
         $menuService = $this->kernel->getContainer()->get(Menu::class);
 
         $menu = $menuService->getBreadcrumbsResult([], 'test_menu');
-        $this->assertIsArray($menu);
         $this->assertSame(0, count($menu));
 
         $menu = $menuService->getBreadcrumbsResult(['selectedSubnavItem' => 'dashboard'], 'test_menu');
-        $this->assertIsArray($menu);
         $this->assertSame(1, count($menu));
         $this->assertTrue($menu[0]->hasChildren());
 
         $menu = $menuService->getBreadcrumbsResult(['selectedSubnavItem' => 'system'], 'test_menu');
 
-        $this->assertIsArray($menu);
         $this->assertSame(1, count($menu));
         $this->assertTrue($menu[0]->hasChildren());
     }

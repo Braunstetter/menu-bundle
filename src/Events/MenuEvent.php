@@ -5,6 +5,7 @@ namespace Braunstetter\MenuBundle\Events;
 
 
 use Braunstetter\MenuBundle\Contracts\MenuItemInterface;
+use Closure;
 use Symfony\Contracts\EventDispatcher\Event;
 use Webmozart\Assert\Assert;
 
@@ -17,24 +18,26 @@ class MenuEvent extends Event
 
     /**
      * MenuEvent constructor.
-     * @param iterable<MenuItemInterface> $items
+     * @param Closure $items
      */
-    public function __construct(iterable $items)
+    public function __construct(Closure $items)
     {
-        $this->items = $items;
+        /** @var iterable<MenuItemInterface> $result */
+        $result = call_user_func($items);
+        $this->items = $result;
     }
 
     public function append(callable $callable): void
     {
+        /** @var iterable<MenuItemInterface> $result */
         $result = call_user_func($callable);
-        Assert::isIterable($result, 'The callable must return an iterable');
         $this->items = $this->append_iterators($this->items, $result);
     }
 
     public function prepend(callable $callable): void
     {
+        /** @var iterable<MenuItemInterface> $result */
         $result = call_user_func($callable);
-        Assert::isIterable($result, 'The callable must return an iterable');
         $this->items = $this->append_iterators($result, $this->items);
     }
 

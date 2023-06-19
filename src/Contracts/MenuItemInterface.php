@@ -4,9 +4,9 @@ namespace Braunstetter\MenuBundle\Contracts;
 
 interface MenuItemInterface
 {
-    public function getType(): string;
+    public function getType(): ?string;
 
-    public function getLabel(): string;
+    public function getLabel(): ?string;
 
     public function setChildren(callable $children): static;
 
@@ -30,7 +30,7 @@ interface MenuItemInterface
 
     public function setTarget(string $target): static;
 
-    public function getUrl(): string;
+    public function getUrl(): ?string;
 
     /**
      * @return array<int|string, bool|int|string>

@@ -6,15 +6,14 @@ namespace Braunstetter\MenuBundle\Services\Resolver;
 
 use Braunstetter\MenuBundle\Contracts\MenuInterface;
 use Braunstetter\MenuBundle\Contracts\MenuItemInterface;
-use Braunstetter\MenuBundle\Items\Item;
-use Symfony\Component\String\UnicodeString;
 use Webmozart\Assert\Assert;
 
 class BreadcrumbsResolver extends AbstractMenuResolver
 {
 
     /**
-     * @param array<string, mixed> $context
+     * @param array<array-key, mixed> $context
+     * @return MenuItemInterface[]
      */
     public function get(string $name, array $context): array
     {
@@ -38,7 +37,7 @@ class BreadcrumbsResolver extends AbstractMenuResolver
     private function resolve(MenuInterface $menu, array $result): array
     {
         $menuItems = call_user_func($menu);
-        Assert::isIterable($menuItems);
+        Assert::allIsInstanceOf($menuItems, MenuItemInterface::class, 'The callable must return an iterable of MenuItems');
 
         /** @var MenuItemInterface $item */
         foreach ($menuItems as $item) {

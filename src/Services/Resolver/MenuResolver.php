@@ -6,14 +6,14 @@ namespace Braunstetter\MenuBundle\Services\Resolver;
 
 use Braunstetter\MenuBundle\Contracts\MenuInterface;
 use Braunstetter\MenuBundle\Contracts\MenuItemInterface;
-use Braunstetter\MenuBundle\Items\Item;
 use Webmozart\Assert\Assert;
 
 class MenuResolver extends AbstractMenuResolver
 {
 
     /**
-     * @param array<string, mixed> $context
+     * @param array<array-key, mixed> $context
+     * @return MenuItemInterface[]
      */
     public function get(string $name, array $context): array
     {
@@ -37,7 +37,7 @@ class MenuResolver extends AbstractMenuResolver
     private function resolve(MenuInterface $menu, array $result): array
     {
         $menuItems = call_user_func($menu);
-        Assert::isIterable($menuItems, 'The menu must return an iterable of menu items');
+        Assert::allIsInstanceOf($menuItems, MenuItemInterface::class, 'The callable must return an iterable of MenuItems');
 
         foreach ($menuItems as $item) {
             $this->setCurrentStates($item);
@@ -47,7 +47,7 @@ class MenuResolver extends AbstractMenuResolver
         return $result;
     }
 
-    private function setCurrentStates(Item $item): void
+    private function setCurrentStates(MenuItemInterface $item): void
     {
         if ($this->matches($item)) {
             return;

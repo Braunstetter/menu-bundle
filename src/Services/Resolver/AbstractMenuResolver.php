@@ -21,11 +21,9 @@ abstract class AbstractMenuResolver implements MenuResolverInterface
     protected iterable $entries;
     private RequestStack $requestStack;
     private UrlGeneratorInterface $generator;
-    protected string $selectedSubnavItem;
+    protected ?string $selectedSubnavItem = null;
 
     /**
-     * AbstractMenuResolver constructor.
-     *
      * @param iterable<MenuInterface> $entries
      */
     public function __construct(iterable $entries, RequestStack $requestStack, UrlGeneratorInterface $generator)
@@ -42,11 +40,11 @@ abstract class AbstractMenuResolver implements MenuResolverInterface
             return true;
         }
 
-        if (!$item->getRouteName()) {
+        if (($routeName = $item->getRouteName()) === null) {
             return false;
         }
 
-        $uri = $this->generator->generate($item->getRouteName(), $item->getRouteParameters() ?: []);
+        $uri = $this->generator->generate($routeName, $item->getRouteParameters() ?: []);
 
         if ($uri === $this->requestStack->getCurrentRequest()?->getPathInfo()) {
             $item->setCurrent(true);
@@ -88,7 +86,7 @@ abstract class AbstractMenuResolver implements MenuResolverInterface
     }
 
     /**
-     * @param array<string, mixed> $context
+     * @param array<array-key, mixed> $context
      */
     protected function setSubnavItem(array $context): void
     {
@@ -102,11 +100,13 @@ abstract class AbstractMenuResolver implements MenuResolverInterface
     protected function getHandle(MenuInterface|MenuItemInterface $class): string
     {
         if (method_exists($class, 'getHandle')) {
-            return $class->getHandle();
+            /** @var string $handle */
+            $handle = $class->getHandle();
+            return $handle;
         }
 
-        if ($class instanceof MenuItemInterface) {
-            return $this->toSnakeCase($class->getLabel());
+        if ($class instanceof MenuItemInterface && ($label = $class->getLabel()) !== null) {
+            return $this->toSnakeCase($label);
         }
 
         $className = (new \ReflectionClass($class))->getShortName();

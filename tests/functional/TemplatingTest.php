@@ -7,6 +7,7 @@ use Braunstetter\MenuBundle\Test\trait\TestKernelTrait;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\DomCrawler\Crawler;
+use Webmozart\Assert\Assert;
 
 
 class TemplatingTest extends TestCase
@@ -15,6 +16,7 @@ class TemplatingTest extends TestCase
 
     public function test_menu_renders_and_shows_correct_items(): void
     {
+        Assert::notNull($this->kernel);
         $client = new KernelBrowser($this->kernel);
         $client->request('GET', '/test/test_menu');
 
@@ -31,6 +33,7 @@ class TemplatingTest extends TestCase
 
     public function test_route_triggers_active(): void
     {
+        Assert::notNull($this->kernel);
         $client = new KernelBrowser($this->kernel);
         $client->request('GET', 'test-two');
 
@@ -45,6 +48,7 @@ class TemplatingTest extends TestCase
 
     public function test_route_to_url_renders_correctly(): void
     {
+        Assert::notNull($this->kernel);
         $client = new KernelBrowser($this->kernel);
         $client->request('GET', 'test-two');
 
@@ -52,27 +56,26 @@ class TemplatingTest extends TestCase
         $this->assertSame(2, $client->getCrawler()->filter('nav')->count());
 
         $this->assertSame(1, $client->getCrawler()->filter('nav')->first()
-            ->filter('a[target=_blank]')->reduce(function ($item) {
-                /** @var Crawler $item */
+            ->filter('a[target=_blank]')->reduce(function (Crawler $item) {
                 return $item->link()->getUri() === 'https://blubber.com';
             })->count());
 
         $this->assertSame(1, $client->getCrawler()->filter('nav')->first()
-            ->filter('a[target=_parent]')->reduce(function ($item) {
-                /** @var Crawler $item */
+            ->filter('a[target=_parent]')->reduce(function (Crawler $item) {
                 return $item->link()->getUri() === 'https://custom-target-by-linkattr.com';
             })->count());
     }
 
     public function test_route_to_url_has_correct_target_attribute(): void
     {
+        Assert::notNull($this->kernel);
         $client = new KernelBrowser($this->kernel);
         $client->request('GET', 'test-two');
 
         $this->assertTrue($client->getResponse()->isSuccessful());
 
-        $routeToUrlItem =  $client->getCrawler()->filter('nav')->first()
-            ->filter('a')->reduce(function ($item) {/** @var Crawler $item */return $item->link()->getUri() === 'https://blubber.com';});
+        $routeToUrlItem = $client->getCrawler()->filter('nav')->first()
+            ->filter('a')->reduce(fn(Crawler $item) => $item->link()->getUri() === 'https://blubber.com');
 
         $this->assertSame($routeToUrlItem->link()->getNode()->getAttribute('target'), Item::TARGET_BLANK);
     }

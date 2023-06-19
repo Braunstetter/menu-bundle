@@ -5,6 +5,7 @@ namespace Braunstetter\MenuBundle\Test\app\src\Menu;
 use Braunstetter\MenuBundle\Events\MenuEvent;
 use Braunstetter\MenuBundle\Factory\MenuItem;
 use Braunstetter\MenuBundle\Menu;
+use Generator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Traversable;
 
@@ -20,7 +21,7 @@ class TestEventMenu extends Menu
 
     public function define(): Traversable
     {
-        $items = function () {
+        $items = function (): Generator {
             yield MenuItem::system('System', 'test', [], 'images/svg/system.svg')
                 ->setRouteParameter('name', 'test_menu')
                 ->setChildren(function () {
@@ -31,7 +32,7 @@ class TestEventMenu extends Menu
                 });
         };
 
-        $testMenuEvent = new MenuEvent($items());
+        $testMenuEvent = new MenuEvent($items);
         $this->eventDispatcher->dispatch($testMenuEvent, 'test.even_test');
         yield from $testMenuEvent->items;
     }
