@@ -42,7 +42,6 @@ class BreadcrumbsResolver extends AbstractMenuResolver
             'The callable must return an iterable of MenuItems'
         );
 
-        /** @var MenuItemInterface $item */
         foreach ($menuItems as $item) {
             $crumb = $this->findBreadCrumb($item);
             if ($crumb) {

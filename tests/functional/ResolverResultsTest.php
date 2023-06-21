@@ -19,11 +19,11 @@ class ResolverResultsTest extends TestCase
     public function testMenuResolverReturnsCorrectOutput(): void
     {
         Assert::notNull($this->kernel);
+
         /** @var MenuResolver $menuResolver */
         $menuResolver = $this->kernel->getContainer()
             ->get(MenuResolver::class);
 
-        /** @var MenuItemInterface[] $menu */
         $menu = $menuResolver->get('test_menu', []);
 
         $this->assertSame(2, count($menu));
