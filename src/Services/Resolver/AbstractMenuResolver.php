@@ -19,7 +19,10 @@ abstract class AbstractMenuResolver implements MenuResolverInterface
      */
     protected iterable $entries;
 
-    protected ?string $selectedSubnavItem = null;
+    /**
+     * @var array<array-key, string>
+     */
+    protected array $selectedSubnavItem = [];
 
     private RequestStack $requestStack;
 
@@ -59,7 +62,7 @@ abstract class AbstractMenuResolver implements MenuResolverInterface
 
     protected function oneOfTheChildrenMatches(MenuItemInterface $item): bool
     {
-        if (! empty($item->getChildren())) {
+        if (!empty($item->getChildren())) {
             foreach ($item->getChildren() as $subItem) {
                 if ($this->matches($subItem)) {
                     $item->setInActiveTrail(true);
@@ -81,11 +84,18 @@ abstract class AbstractMenuResolver implements MenuResolverInterface
      */
     protected function setSubnavItem(array $context): void
     {
-        if (array_key_exists('selectedSubnavItem', $context)) {
-            $selectedSubnavItem = $context['selectedSubnavItem'];
-            Assert::string($selectedSubnavItem);
-            $this->selectedSubnavItem = $selectedSubnavItem;
+        if (!array_key_exists('selectedSubnavItem', $context)) {
+            return;
         }
+
+        /** @var array<array-key, string>|string $selectedSubnavItem */
+        $selectedSubnavItem = $context['selectedSubnavItem'];
+
+        if (is_string($selectedSubnavItem)) {
+            $selectedSubnavItem = [$selectedSubnavItem];
+        }
+
+        $this->selectedSubnavItem  = $selectedSubnavItem;
     }
 
     protected function getHandle(MenuInterface|MenuItemInterface $class): string
@@ -117,11 +127,7 @@ abstract class AbstractMenuResolver implements MenuResolverInterface
 
     private function selectedSubnavItemMatches(MenuItemInterface $item): bool
     {
-        if (! isset($this->selectedSubnavItem)) {
-            return false;
-        }
-
-        return $this->getHandle($item) === $this->selectedSubnavItem;
+        return in_array($this->getHandle($item), $this->selectedSubnavItem);
     }
 
     private function toSnakeCase(string $string): string
