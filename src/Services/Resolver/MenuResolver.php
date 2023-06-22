@@ -35,7 +35,7 @@ class MenuResolver extends AbstractMenuResolver
      */
     private function resolve(MenuInterface $menu, array $result): array
     {
-        $menuItems = call_user_func($menu);
+        $menuItems = $this->resolveMenu($menu);
         Assert::allIsInstanceOf(
             $menuItems,
             MenuItemInterface::class,

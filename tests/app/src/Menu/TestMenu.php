@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Braunstetter\MenuBundle\Test\app\src\Menu;
 
+use Braunstetter\MenuBundle\Contracts\MenuInterface;
 use Braunstetter\MenuBundle\Factory\MenuItem;
 use Braunstetter\MenuBundle\Items\Item;
 use Braunstetter\MenuBundle\Items\UrlMenuItem;
-use Braunstetter\MenuBundle\Menu;
 use Traversable;
 
-class TestMenu extends Menu
+class TestMenu implements MenuInterface
 {
     public function define(): Traversable
     {

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Braunstetter\MenuBundle\Test\app\src\Menu;
 
+use Braunstetter\MenuBundle\Contracts\MenuInterface;
 use Braunstetter\MenuBundle\Events\MenuEvent;
 use Braunstetter\MenuBundle\Factory\MenuItem;
-use Braunstetter\MenuBundle\Menu;
 use Generator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Traversable;
 
-class TestEventMenu extends Menu
+class TestEventMenu implements MenuInterface
 {
     private EventDispatcherInterface $eventDispatcher;
 

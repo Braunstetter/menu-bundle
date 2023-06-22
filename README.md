@@ -40,26 +40,21 @@ Once installed you can create a menu by creating a class extending `Braunstetter
 
 namespace App\Menu;
 
-use Braunstetter\MenuBundle\Events\MenuEvent;
+use Braunstetter\MenuBundle\Contracts\MenuInterface;use Braunstetter\MenuBundle\Events\MenuEvent;
 use Braunstetter\MenuBundle\Factory\MenuItem;
-use Braunstetter\MenuBundle\Menu;
 use Traversable;
 
-class MainMenu extends Menu
+class MainMenu implements MenuInterface
 {
-
     public function define(): Traversable
     {
-
         yield MenuItem::linkToRoute('System', 'route_to_my_system', [], 'images/svg/system.svg')->setChildren(function () {
             yield MenuItem::linkToUrl('Section', 'https://my-site.com', MenuItem::TARGET_BLANK, 'images/svg/thunder.svg')->setChildren(function () {
                 yield MenuItem::linkToRoute('Site', 'site', [], 'images/svg/align_justify.svg');
                 yield MenuItem::linkToRoute('Dashboard', 'cp_dashboard');
             });
         });
-
     }
-
 }
 ```
 

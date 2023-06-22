@@ -107,6 +107,14 @@ abstract class AbstractMenuResolver implements MenuResolverInterface
         return $this->toSnakeCase($className);
     }
 
+    /**
+     * @return  MenuItemInterface[]
+     */
+    protected function resolveMenu(MenuInterface $menu): array
+    {
+        return iterator_to_array($menu->define(), false);
+    }
+
     private function selectedSubnavItemMatches(MenuItemInterface $item): bool
     {
         if (! isset($this->selectedSubnavItem)) {

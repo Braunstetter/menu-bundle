@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Braunstetter\MenuBundle\Contracts;
 
+use Traversable;
+
 interface MenuInterface
 {
     /**
-     * @return MenuItemInterface[]
+     * @return Traversable<MenuItemInterface>
      */
-    public function __invoke(): array;
+    public function define(): Traversable;
 }
