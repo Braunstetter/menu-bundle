@@ -17,7 +17,6 @@ services:
   Braunstetter\MenuBundle\Services\Resolver\BreadcrumbsResolver:
     parent: Braunstetter\MenuBundle\Services\Resolver\AbstractMenuResolver
 
-
   Braunstetter\MenuBundle\Services\Menu:
     arguments:
       - '@Braunstetter\MenuBundle\Services\Resolver\MenuResolver'

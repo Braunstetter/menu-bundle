@@ -1,9 +1,13 @@
-{% if name is defined %}
-    {{ menu(name) }}
-    {{ breadcrumbs(name) }}
-{% else %}
-    {{ menu('test_menu') }}
-    {{ breadcrumbs('test_menu') }}
-{% endif %}
+{% extends "test_base.html.twig" %}
 
+{% block body %}
 
+    {% if name is defined %}
+        {{ menu(name) }}
+        {{ breadcrumbs(name) }}
+    {% else %}
+        {{ menu('test_menu') }}
+        {{ breadcrumbs('test_menu') }}
+    {% endif %}
+
+{% endblock %}

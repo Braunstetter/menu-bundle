@@ -1,0 +1,31 @@
+svg {
+    width: 2rem;
+    height: 2rem;
+}
+
+.section {
+    margin-bottom: 3rem;
+    padding-left: 2rem;
+}
+
+.section > div {
+    margin-left: 2rem;
+}
+
+a, span {
+    color: blue;
+    text-decoration: none;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.active, .active a, .active span {
+    color: saddlebrown;
+    font-weight: bold;
+}
+
+.current, .current a, .current span {
+    color: darkorange !important;
+}

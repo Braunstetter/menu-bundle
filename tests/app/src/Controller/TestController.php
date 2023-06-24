@@ -41,4 +41,10 @@ class TestController
         return (new Response())
             ->setContent($this->twig->render('test.html.twig'));
     }
+
+    public function multiSubnavRoute(): Response
+    {
+        return (new Response())
+            ->setContent($this->twig->render('test.html.twig'));
+    }
 }

@@ -10,7 +10,6 @@ use Braunstetter\MenuBundle\Contracts\MenuResolverInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\String\UnicodeString;
-use Webmozart\Assert\Assert;
 
 abstract class AbstractMenuResolver implements MenuResolverInterface
 {
@@ -62,7 +61,7 @@ abstract class AbstractMenuResolver implements MenuResolverInterface
 
     protected function oneOfTheChildrenMatches(MenuItemInterface $item): bool
     {
-        if (!empty($item->getChildren())) {
+        if (! empty($item->getChildren())) {
             foreach ($item->getChildren() as $subItem) {
                 if ($this->matches($subItem)) {
                     $item->setInActiveTrail(true);
@@ -84,7 +83,7 @@ abstract class AbstractMenuResolver implements MenuResolverInterface
      */
     protected function setSubnavItem(array $context): void
     {
-        if (!array_key_exists('selectedSubnavItem', $context)) {
+        if (! array_key_exists('selectedSubnavItem', $context)) {
             return;
         }
 
@@ -95,7 +94,7 @@ abstract class AbstractMenuResolver implements MenuResolverInterface
             $selectedSubnavItem = [$selectedSubnavItem];
         }
 
-        $this->selectedSubnavItem  = $selectedSubnavItem;
+        $this->selectedSubnavItem = $selectedSubnavItem;
     }
 
     protected function getHandle(MenuInterface|MenuItemInterface $class): string
@@ -127,7 +126,7 @@ abstract class AbstractMenuResolver implements MenuResolverInterface
 
     private function selectedSubnavItemMatches(MenuItemInterface $item): bool
     {
-        return in_array($this->getHandle($item), $this->selectedSubnavItem);
+        return in_array($this->getHandle($item), $this->selectedSubnavItem, true);
     }
 
     private function toSnakeCase(string $string): string
