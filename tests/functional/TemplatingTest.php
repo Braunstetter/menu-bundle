@@ -87,4 +87,24 @@ class TemplatingTest extends TestCase
 
         $this->assertSame($routeToUrlItem->link()->getNode()->getAttribute('target'), Item::TARGET_BLANK);
     }
+
+    public function testMultipleSubnavs(): void
+    {
+        Assert::notNull($this->kernel);
+        $client = new KernelBrowser($this->kernel);
+        $client->request('GET', '/test-multiple-subnavs');
+
+        $this->assertTrue($client->getResponse()->isSuccessful());
+
+        $currentLinks = $client->getCrawler()
+            ->filter('.current');
+
+        $this->assertSame(3, $currentLinks->count());
+
+        $currentLinks->each(function (Crawler $node, int $i) {
+            $expectedContents = ['API', 'Blocks', 'Permissions'];
+            $text = $node->text();
+            $this->assertEquals($expectedContents[$i], trim($text));
+        });
+    }
 }

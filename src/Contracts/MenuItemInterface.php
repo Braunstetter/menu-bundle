@@ -43,4 +43,6 @@ interface MenuItemInterface
      * @return array<int|string, bool|int|string>
      */
     public function getLinkAttr(): array;
+
+    public function isCurrent(): bool;
 }

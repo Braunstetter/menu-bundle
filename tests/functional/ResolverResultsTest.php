@@ -10,6 +10,7 @@ use Braunstetter\MenuBundle\Services\Menu;
 use Braunstetter\MenuBundle\Services\Resolver\MenuResolver;
 use Braunstetter\MenuBundle\Test\trait\TestKernelTrait;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use Webmozart\Assert\Assert;
 
 class ResolverResultsTest extends TestCase
@@ -76,6 +77,22 @@ class ResolverResultsTest extends TestCase
         $this->assertTrue($menu[0]->hasChildren());
     }
 
+    public function testMenuResolverCanResolverMultipleSubnavItems(): void
+    {
+        Assert::notNull($this->kernel);
+        /** @var Menu $menuService */
+        $menuService = $this->kernel->getContainer()
+            ->get(Menu::class);
+
+        $menu = $menuService->getMenuResult([
+            'selectedSubnavItem' => ['api', 'pages'],
+        ], 'side_test_menu');
+
+        $this->assertSame(2, count($menu));
+        $this->testItemIsCurrent(menu: $menu, label: 'API');
+        $this->testItemIsCurrent(menu: $menu, label: 'Pages', propertyPath: '[1].children[0].children');
+    }
+
     /**
      * @param MenuItemInterface[] $array
      * @return array<MenuItemInterface>
@@ -85,5 +102,28 @@ class ResolverResultsTest extends TestCase
         $childrenOfFirstItem = $array[0]->getChildren();
         Assert::isArray($childrenOfFirstItem);
         return $childrenOfFirstItem;
+    }
+
+    /**
+     * @param MenuItemInterface[] $menu
+     */
+    private function testItemIsCurrent(
+        array $menu,
+        string $label,
+        string $propertyPath = '[0].children[0].children'
+    ): void {
+        $propertyAccessor = PropertyAccess::createPropertyAccessor();
+
+        /** @var MenuItemInterface[] $items */
+        $items = $propertyAccessor->getValue($menu, $propertyPath);
+
+        $pagesItems = array_filter($items, function (MenuItemInterface $item) use ($label) {
+            return $item->getLabel() === $label;
+        });
+
+        $pagesItem = reset($pagesItems);
+
+        $this->assertInstanceOf(MenuItemInterface::class, $pagesItem);
+        $this->assertTrue($pagesItem->isCurrent());
     }
 }

@@ -45,6 +45,7 @@
     "phpstan/phpstan": "^1.10",
     "vimeo/psalm": "^5.12",
     "psalm/plugin-phpunit": "^0.18.4",
-    "symplify/easy-coding-standard": "^11.4"
+    "symplify/easy-coding-standard": "^11.4",
+    "symfony/property-access": "^6.3"
   }
 }

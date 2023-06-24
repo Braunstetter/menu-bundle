@@ -24,7 +24,7 @@
     {% endif %}
 
     {% if current %}
-        {% set linkAttr = linkAttr|merge({'class' : (linkAttr.class|default('') ~ ' underline')|trim }) %}
+        {% set linkAttr = linkAttr|merge({'class' : (linkAttr.class|default('') ~ ' current')|trim }) %}
     {% endif %}
 
     <div {{ helper.renderAttr(attr) }}>

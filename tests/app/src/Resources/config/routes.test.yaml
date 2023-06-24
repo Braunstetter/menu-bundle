@@ -13,3 +13,7 @@ test_two:
 test_three:
   path: /test-three
   controller: Braunstetter\MenuBundle\Test\app\src\Controller\TestController::levelThreeRoute
+
+test_multiple_subnavs:
+  path: /test-multiple-subnavs
+  controller: Braunstetter\MenuBundle\Test\app\src\Controller\TestController::multipleSubnavsRoute

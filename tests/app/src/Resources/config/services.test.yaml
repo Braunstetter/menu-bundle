@@ -2,6 +2,12 @@ services:
   Braunstetter\MenuBundle\Test\app\src\Menu\TestMenu:
     tags: ['menu']
 
+  Braunstetter\MenuBundle\Test\app\src\Menu\SideTestMenu:
+    tags: ['menu']
+
+  Braunstetter\MenuBundle\Test\app\src\Menu\UserTestMenu:
+    tags: ['menu']
+
   Braunstetter\MenuBundle\Test\app\src\Menu\TestEventMenu:
     tags: [ 'menu' ]
     arguments:

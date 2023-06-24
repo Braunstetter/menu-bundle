@@ -1,0 +1,9 @@
+{% extends "test_base.html.twig" %}
+
+{% set selectedSubnavItem = ['api', 'blocks', 'permissions'] %}
+
+{% block body %}
+    {{ menu('side_test_menu') }}
+    {{ menu('test_menu') }}
+    {{ menu('user_test_menu') }}
+{% endblock %}
