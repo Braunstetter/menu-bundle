@@ -5,34 +5,27 @@
 [![Total Downloads](http://poser.pugx.org/braunstetter/menu-bundle/downloads)](https://packagist.org/packages/braunstetter/menu-bundle)
 [![License](http://poser.pugx.org/braunstetter/menu-bundle/license)](https://packagist.org/packages/braunstetter/menu-bundle)
 
-## Pros of using this bundle
+## Overview
+`braunstetter/menu-bundle` is a powerful tool designed to simplify the process of creating menus in your Symfony projects. It provides an easy and intuitive interface to create and configure various types of menus.
 
-I used [KnpMenuBundle](https://github.com/KnpLabs/KnpMenuBundle) for all my symfony projects over years. It's a
-wonderful piece of software and I'm very grateful for it, but I sometimes felt like I was fighting more the system
-behind this bundle then writing menus.
+Benefits of using this bundle include:
 
-As soon as I wanted to write my own matcher or change the rendering very specifically, it became uncomfortable.
-
-So the pros of this bundle are very clear:
-
-- no Matcher hell - when a template needs to activate a menu item it can be done by setting
-  the [`selectedSubnavItem`](#activate-a-menu-item-when-its-not-a-direct-children)
-- no rendering system to fight against. If you want to use the render blocks provided by this bundle - u are welcome -
-  if not just fetch the raw data (with the active trail) and rock'n roll.
-
-In addition to all of these avoidances, there are of course 'real' benefits as well.
-
-- reuse your menu classes in different shapes (menu, breadcrumb) everywhere
-- grow your ecosystem by letting others extend your finished menus using
-  the [MenuEvent](#allow-others-to-extend-your-menus-with-menuevents) class.
+* **No matcher complexities:** You can easily activate a menu item with the selectedSubnavItem function, without it needing to be a direct child.
+* **No rendering system to struggle with:** You can use the render blocks provided by this bundle, or fetch the raw data and customize it as you wish.
+* **Reusability:** You can reuse your menu classes in different contexts (menu, breadcrumb) across your application.
+* **Expandability:** Grow your ecosystem by letting others extend your finished menus using the MenuEvent class.
 
 ## Installation
 
+To install the MenuBundle, simply run the following command:
+
 `composer require braunstetter/menu-bundle`
+
+Symfony flex does all the rest for you.
 
 ## Usage
 
-Once installed you can create a menu by creating a class extending `Braunstetter\MenuBundle\Menu`.
+After installation, you can create a menu by creating a class implementing `MenuInterface`. This is an example of how to define a menu:
 
 ```php
 <?php
@@ -40,7 +33,8 @@ Once installed you can create a menu by creating a class extending `Braunstetter
 
 namespace App\Menu;
 
-use Braunstetter\MenuBundle\Contracts\MenuInterface;use Braunstetter\MenuBundle\Events\MenuEvent;
+use Braunstetter\MenuBundle\Contracts\MenuInterface;
+use Braunstetter\MenuBundle\Events\MenuEvent;
 use Braunstetter\MenuBundle\Factory\MenuItem;
 use Traversable;
 
@@ -272,15 +266,12 @@ trail).
 Instead of going crazy with a custom Matcher you can just do that:
 
 ```
-{% extends 'layouts/base.html.twig' %}
-
-{% block title %}Hello!{% endblock %}
-
 {% set selectedSubnavItem = 'snake_cased_item_label' %}
 
-{% block container %}
-  {# your content here #}
-{% endblock %}
+// you can also pass an array of items to activate multiple items at once
+// selectedSubnavItem = ['snake_cased_item_label', 'another_snake_cased_item_label']
+
+{{ menu('main_menu') }}
 ```
 
 The Menu item matching this route will be active and all parents will be inside the active trail.
