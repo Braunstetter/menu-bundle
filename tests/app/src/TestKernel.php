@@ -28,6 +28,11 @@ class TestKernel extends Kernel
             'router' => [
                 'utf8' => true,
             ],
+            'http_method_override' => false,
+            'handle_all_throwables' => true,
+            'php_errors' => [
+                'log' => true,
+            ],
         ]);
 
         $container->extension('twig', [
